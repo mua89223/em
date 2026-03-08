@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EM環保酵素：從居家到友善農法的加值研究計畫</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Base styling overrides */
+        body {
+            background-color: #fafaf9; /* Tailwind stone-50 */
+            color: #334155; /* Tailwind slate-700 */
+            font-family: 'Helvetica Neue', Arial, 'LiHei Pro', 'Microsoft JhengHei', sans-serif;
+        }
+
+        /* Strict Chart Container Styling as required */
+        .chart-container-strict {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Max width to prevent excessive stretching */
+            margin-left: auto;
+            margin-right: auto;
+            height: 45vh; /* Responsive height */
+            min-height: 350px;
+            max-height: 500px; /* Max height to prevent overflow */
+        }
+
+        /* Custom scrollbar for aesthetic */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a8a29e;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #78716c;
+        }
+
+        /* Simple animation classes */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Chosen Palette: Nature's Harmony (Stone-50 background, Green-700 primary, Emerald-600 accents, Amber-700 for highlights) -->
+    <!-- Application Structure Plan: The SPA is structured linearly to guide the user through the research narrative. It starts with a conceptual overview (Theory), moves to accessible micro-applications (Home), scales up to macro-applications (Agriculture), and concludes with execution plans (Timeline). This flow takes the user from understanding 'What' to 'How (small scale)' to 'How (large scale/impact)'. Interactive elements like the calculator and dynamic charts keep the user engaged rather than just reading a static proposal. -->
+    <!-- Visualization & Content Choices: 
+         1. Theory: Unicode icons + Grid layout -> Goal: Quick comprehension of components -> Justification: Breaks down complex biological concepts into digestible parts.
+         2. Home Application: Interactive Calculator -> Goal: Practical engagement -> Justification: Allows users to immediately apply the theory to their own context, demonstrating feasibility.
+         3. Ag Application: Chart.js Grouped Bar Chart -> Goal: Compare projected yields across treatments -> Justification: Bar charts are best for comparing discrete groups across time series, clearly showing the hypothetical advantage of the EM+Enzyme combination. No SVG used. 
+         4. Timeline: HTML/CSS Grid Steps -> Goal: Show project phases -> Justification: Clear, linear visual progression without complex external libraries. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+</head>
+<body class="antialiased selection:bg-green-200 selection:text-green-900">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-stone-50/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">🌿</span>
+                    <span class="font-bold text-xl text-green-800">EM酵素研究計畫</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#theory" class="text-stone-600 hover:text-green-700 font-medium transition-colors">核心理論</a>
+                    <a href="#home-use" class="text-stone-600 hover:text-green-700 font-medium transition-colors">居家實證</a>
+                    <a href="#agriculture" class="text-stone-600 hover:text-green-700 font-medium transition-colors">友善稻作</a>
+                    <a href="#timeline" class="text-stone-600 hover:text-green-700 font-medium transition-colors">預期效益</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-20 pb-24 lg:pt-32 lg:pb-40 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center fade-in">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-stone-900 tracking-tight mb-6">
+                催化永續：<span class="text-green-700">EM菌與環保酵素</span>的協同效應
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-stone-600">
+                本研究計畫旨在探討於傳統環保酵素中導入EM (Effective Microorganisms) 益生菌群，評估其在「居家環境淨化」與「友善稻米耕作」雙軌應用中的可行性與增效作用。
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <a href="#theory" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-700 hover:bg-green-800 md:py-4 md:text-lg transition-all shadow-lg hover:shadow-xl">
+                    了解計畫架構
+                </a>
+            </div>
+        </div>
+        <!-- Decorative background elements using CSS -->
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-full overflow-hidden -z-10 pointer-events-none opacity-20">
+            <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-green-300 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+            <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+        </div>
+    </header>
+
+    <!-- Section 1: Theory & Components -->
+    <section id="theory" class="py-16 bg-white border-y border-stone-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-stone-900 mb-4">核心理論：1+1 > 2 的生物協同</h2>
+                <p class="text-lg text-stone-600 max-w-3xl mx-auto">
+                    本區塊說明計畫的兩大核心物質。傳統環保酵素依賴自然落菌發酵，品質較難穩定；導入EM菌群可主導發酵走向，減少腐敗風險，並大幅提升最終產物的活性與功能性。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-stone-50 rounded-2xl p-8 border border-stone-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-5xl mb-4 text-center">🍎</div>
+                    <h3 class="text-xl font-bold text-center text-stone-800 mb-3">環保酵素 (Garbage Enzyme)</h3>
+                    <ul class="space-y-2 text-stone-600">
+                        <li class="flex items-start"><span class="mr-2">▪️</span> 來源：生鮮果皮、蔬菜廢料、黑糖、水。</li>
+                        <li class="flex items-start"><span class="mr-2">▪️</span> 原理：厭氧發酵產生多種有機酸、醇類與酵素。</li>
+                        <li class="flex items-start"><span class="mr-2">▪️</span> 優勢：廢棄物利用、降低碳排。</li>
+                    </ul>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="bg-stone-50 rounded-2xl p-8 border border-stone-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-5xl mb-4 text-center">🦠</div>
+                    <h3 class="text-xl font-bold text-center text-stone-800 mb-3">EM菌群 (Effective Microorganisms)</h3>
+                    <ul class="space-y-2 text-stone-600">
+                        <li class="flex items-start"><span class="mr-2">▪️</span> 來源：乳酸菌、酵母菌、光合菌等共生菌群。</li>
+                        <li class="flex items-start"><span class="mr-2">▪️</span> 原理：分泌抗氧化物質，抑制有害微生物生長。</li>
+                        <li class="flex items-start"><span class="mr-2">▪️</span> 優勢：強勢菌種，加速分解，除臭效果顯著。</li>
+                    </ul>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-emerald-50 rounded-2xl p-8 border border-emerald-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">✨</div>
+                    <div class="text-5xl mb-4 text-center">🧪</div>
+                    <h3 class="text-xl font-bold text-center text-emerald-800 mb-3">本計畫：EM環保酵素 (增強型)</h3>
+                    <ul class="space-y-2 text-emerald-700">
+                        <li class="flex items-start"><span class="mr-2 font-bold">✓</span> 縮短發酵時間 (從3個月縮減至1個月)。</li>
+                        <li class="flex items-start"><span class="mr-2 font-bold">✓</span> 提高成功率，氣味更佳 (清香微酸)。</li>
+                        <li class="flex items-start"><span class="mr-2 font-bold">✓</span> 提升代謝產物濃度，增強洗淨與肥效。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Home Application -->
+    <section id="home-use" class="py-16 bg-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                
+                <div class="w-full lg:w-1/2">
+                    <h2 class="text-3xl font-bold text-stone-900 mb-4">實驗一：居家可行性與製作標準化</h2>
+                    <p class="text-lg text-stone-600 mb-6">
+                        為推廣至一般家庭，本計畫首要任務是建立包含EM菌的標準化製作比例，並測試其在去污、除臭上的效能。透過簡單的計算，民眾即可在家製作高品質酵素。
+                    </p>
+                    
+                    <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm mb-6">
+                        <h4 class="font-bold text-stone-800 mb-3 flex items-center">
+                            <span class="text-2xl mr-2">🧼</span> 預計測試項目
+                        </h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 bg-stone-50 rounded">
+                                <span class="font-medium">廚房油污分解測試</span>
+                                <span class="text-xs font-semibold bg-green-100 text-green-800 px-2 py-1 rounded">滴定法檢驗</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-stone-50 rounded">
+                                <span class="font-medium">浴廁氨氣(臭味)消除</span>
+                                <span class="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-1 rounded">氣體檢測儀</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-stone-50 rounded">
+                                <span class="font-medium">室內盆栽生長觀察</span>
+                                <span class="text-xs font-semibold bg-amber-100 text-amber-800 px-2 py-1 rounded">稀釋1000倍</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Calculator -->
+                <div class="w-full lg:w-1/2">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg border border-green-100 relative">
+                        <div class="absolute -top-4 -right-4 bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold shadow-md">實用</div>
+                        <h3 class="text-2xl font-bold text-stone-800 mb-6 text-center">EM酵素標準製作計算機</h3>
+                        
+                        <div class="mb-6">
+                            <label for="container-size" class="block text-sm font-medium text-stone-700 mb-2">請輸入您的發酵容器總容量 (公升):</label>
+                            <div class="flex items-center">
+                                <input type="number" id="container-size" value="10" min="1" class="block w-full border-stone-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-lg p-3 border">
+                                <span class="ml-3 text-stone-500 font-medium">公升 (L)</span>
+                            </div>
+                            <p class="text-xs text-stone-500 mt-2">提示：預留20%空間供發酵產氣使用。</p>
+                        </div>
+
+                        <div class="bg-stone-50 p-6 rounded-lg border border-stone-200">
+                            <h4 class="text-sm font-bold text-stone-500 uppercase tracking-wider mb-4 border-b pb-2">所需材料配比 (1:3:10 基礎)</h4>
+                            
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="flex items-center text-stone-700"><span class="w-6 text-center mr-2">💧</span> 無氯清水 (約60%)</span>
+                                    <span id="calc-water" class="font-bold text-lg text-blue-600">6.0 L</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="flex items-center text-stone-700"><span class="w-6 text-center mr-2">🥬</span> 生鮮果菜皮</span>
+                                    <span id="calc-scraps" class="font-bold text-lg text-green-600">1.8 kg</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="flex items-center text-stone-700"><span class="w-6 text-center mr-2">🟤</span> 黑糖/糖蜜</span>
+                                    <span id="calc-sugar" class="font-bold text-lg text-amber-700">0.6 kg</span>
+                                </div>
+                                <div class="pt-2 border-t border-stone-200 flex justify-between items-center">
+                                    <span class="flex items-center font-bold text-stone-800"><span class="w-6 text-center mr-2">🦠</span> EM原液添加量</span>
+                                    <span id="calc-em" class="font-bold text-xl text-emerald-600 bg-emerald-100 px-3 py-1 rounded-md">60 ml</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Agriculture Application (The Core Research) -->
+    <section id="agriculture" class="py-16 bg-white border-y border-stone-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="bg-amber-100 text-amber-800 text-sm font-bold px-3 py-1 rounded-full uppercase tracking-wide">進階研究</span>
+                <h2 class="text-3xl font-bold text-stone-900 mt-4 mb-4">實驗二：友善耕種稻米產量與地力改善評估</h2>
+                <p class="text-lg text-stone-600 max-w-4xl mx-auto">
+                    本計畫的核心將實驗從室內移至農田。探討施用EM環保酵素對水稻生長指標、最終產量，以及土壤有機質轉化的影響。目的是尋找減少化學肥料依賴的替代方案。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <div class="col-span-1 bg-stone-50 p-6 rounded-xl border border-stone-200">
+                    <h3 class="font-bold text-lg border-b pb-2 mb-4 text-stone-800">試驗田區設計 (預估)</h3>
+                    <ul class="space-y-4">
+                        <li>
+                            <div class="font-semibold text-stone-800">對照組 (Control)</div>
+                            <div class="text-sm text-stone-600">常規化學肥料施作 (N-P-K標準比例)</div>
+                        </li>
+                        <li>
+                            <div class="font-semibold text-green-700">實驗組 A (Enzyme)</div>
+                            <div class="text-sm text-stone-600">化肥減半 + 傳統環保酵素 (稀釋500倍噴灑)</div>
+                        </li>
+                        <li>
+                            <div class="font-semibold text-emerald-600">實驗組 B (EM+Enzyme)</div>
+                            <div class="text-sm text-stone-600">化肥減半 + <b>EM環保酵素</b> (稀釋500倍噴灑+灌注)</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-span-1 lg:col-span-2">
+                    <!-- Required Chart Container structure -->
+                    <div class="chart-container-strict bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
+                        <canvas id="yieldChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-stone-500 mt-4">圖表：連續三期作之預期稻米產量比較 (模擬數據，單位：公斤/公頃)。可觀察到EM+酵素組在土壤改良後，產量有超越常規農法的潛力。</p>
+                </div>
+            </div>
+
+            <!-- Mechanisms -->
+            <div class="bg-amber-50 rounded-2xl p-8 border border-amber-100">
+                <h3 class="text-xl font-bold text-amber-900 mb-6 text-center">探討：為何EM酵素能改善產量？ (研究假說)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div>
+                        <div class="text-4xl mb-3">🌱</div>
+                        <h4 class="font-bold text-stone-800 mb-2">促進根系發展</h4>
+                        <p class="text-sm text-stone-600">酵素中的氨基酸與激素刺激根毛生長；EM菌分泌有機酸溶解土壤固結磷鉀，提高養分吸收率。</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-3">🐛</div>
+                        <h4 class="font-bold text-stone-800 mb-2">改善土壤微生態</h4>
+                        <p class="text-sm text-stone-600">EM菌群成為優勢菌，抑制水稻紋枯病等土傳病害；加速稻稈腐熟，將有機質轉化為腐殖酸。</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-3">🌾</div>
+                        <h4 class="font-bold text-stone-800 mb-2">增強抗逆境能力</h4>
+                        <p class="text-sm text-stone-600">光合菌群提升葉片光合作用效率；植物體內抗氧化物增加，對極端氣候(如高溫)耐受度提升。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Timeline & Execution -->
+    <section id="timeline" class="py-16 bg-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-stone-900 mb-10 text-center">研究時程與預期成果</h2>
+            
+            <div class="max-w-4xl mx-auto">
+                <!-- Timeline using CSS Border/Padding trick -->
+                <div class="relative border-l-2 border-green-300 ml-3 md:ml-0 md:border-none space-y-8">
+                    
+                    <!-- Phase 1 -->
+                    <div class="relative md:flex items-center justify-between">
+                        <div class="hidden md:block w-2/5 text-right pr-8 font-bold text-stone-700">第 1-3 個月</div>
+                        <div class="absolute left-[-9px] md:relative md:left-0 w-4 h-4 rounded-full bg-green-500 border-4 border-white shadow"></div>
+                        <div class="md:w-2/5 pl-8 md:pl-0 mt-2 md:mt-0">
+                            <div class="bg-white p-5 rounded-lg border border-stone-200 shadow-sm">
+                                <h4 class="font-bold text-green-700 text-lg">階段一：製備與居家實證</h4>
+                                <p class="text-sm text-stone-600 mt-2">完成不同比例之EM酵素發酵，測試pH值與活菌數。進行廚房油污與浴廁除臭量化測試，建立居家推廣手冊。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="relative md:flex items-center justify-between flex-row-reverse">
+                        <div class="hidden md:block w-2/5 text-left pl-8 font-bold text-stone-700">第 4-9 個月</div>
+                        <div class="absolute left-[-9px] md:relative md:left-0 w-4 h-4 rounded-full bg-emerald-500 border-4 border-white shadow"></div>
+                        <div class="md:w-2/5 pl-8 md:pl-0 mt-2 md:mt-0">
+                            <div class="bg-white p-5 rounded-lg border border-stone-200 shadow-sm">
+                                <h4 class="font-bold text-emerald-700 text-lg">階段二：第一期水稻田間試驗</h4>
+                                <p class="text-sm text-stone-600 mt-2">佈建試驗田。記錄水稻分蘗數、葉綠素含量(SPAD)。採收期測量千粒重與總產量。採集土壤分析有機質變化。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="relative md:flex items-center justify-between">
+                        <div class="hidden md:block w-2/5 text-right pr-8 font-bold text-stone-700">第 10-12 個月</div>
+                        <div class="absolute left-[-9px] md:relative md:left-0 w-4 h-4 rounded-full bg-amber-500 border-4 border-white shadow"></div>
+                        <div class="md:w-2/5 pl-8 md:pl-0 mt-2 md:mt-0">
+                            <div class="bg-white p-5 rounded-lg border border-stone-200 shadow-sm">
+                                <h4 class="font-bold text-amber-700 text-lg">階段三：數據分析與結案</h4>
+                                <p class="text-sm text-stone-600 mt-2">對比常規農法與EM酵素組的經濟效益（肥料成本vs產量收益）。撰寫研究報告，舉辦成果發表會推廣友善農法。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-stone-900 text-stone-400 py-8 text-center text-sm">
+        <p>本互動網頁僅為「EM環保酵素應用研究計畫」之概念展示架構。</p>
+        <p class="mt-2">Designed for clear information architecture and interactivity.</p>
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. Calculator Logic ---
+            const containerInput = document.getElementById('container-size');
+            const elWater = document.getElementById('calc-water');
+            const elScraps = document.getElementById('calc-scraps');
+            const elSugar = document.getElementById('calc-sugar');
+            const elEm = document.getElementById('calc-em');
+
+            function calculateRecipe() {
+                let totalVolume = parseFloat(containerInput.value) || 0;
+                // Leave 20% space for gas, usable volume is 80%
+                let usableVolume = totalVolume * 0.8; 
+                
+                // Ratio: Water(10) : Scraps(3) : Sugar(1) = 14 parts total
+                let onePart = usableVolume / 14;
+
+                let waterLiters = onePart * 10;
+                let scrapsKg = onePart * 3;
+                let sugarKg = onePart * 1;
+                // Rule of thumb for EM: 1% of water volume
+                let emMl = waterLiters * 1000 * 0.01; 
+
+                elWater.textContent = waterLiters.toFixed(1) + ' L';
+                elScraps.textContent = scrapsKg.toFixed(1) + ' kg';
+                elSugar.textContent = sugarKg.toFixed(1) + ' kg';
+                // Cap EM suggestion to reasonable whole numbers
+                elEm.textContent = Math.round(emMl) + ' ml';
+            }
+
+            containerInput.addEventListener('input', calculateRecipe);
+            calculateRecipe(); // Init
+
+            // --- 2. Chart.js Initialization ---
+            const ctx = document.getElementById('yieldChart').getContext('2d');
+            
+            // Hypothetical Research Data
+            const labels = ['第一期作 (第1年)', '第二期作 (第1年)', '第三期作 (第2年)'];
+            const dataControl = [6500, 6400, 6450]; // Stable but reliant on chemicals
+            const dataEnzyme = [6200, 6400, 6600];  // Initial drop as soil adjusts, then improves
+            const dataEmEnzyme = [6400, 6750, 7100]; // Faster adjustment, significant yield boost
+
+            const yieldChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '對照組 (常規化肥)',
+                            data: dataControl,
+                            backgroundColor: '#e5e7eb', // stone-200
+                            borderColor: '#9ca3af', // gray-400
+                            borderWidth: 1
+                        },
+                        {
+                            label: '實驗組A (純酵素)',
+                            data: dataEnzyme,
+                            backgroundColor: 'rgba(74, 222, 128, 0.6)', // green-400
+                            borderColor: '#16a34a', // green-600
+                            borderWidth: 1
+                        },
+                        {
+                            label: '實驗組B (EM+酵素)',
+                            data: dataEmEnzyme,
+                            backgroundColor: 'rgba(5, 150, 105, 0.8)', // emerald-600
+                            borderColor: '#047857', // emerald-700
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // CRITICAL for filling the strictly styled container
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif" }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + ' kg/ha';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 5000, // Zoom in on the differences
+                            title: {
+                                display: true,
+                                text: '預期產量 (公斤/公頃)'
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+
+        });
+    </script>
+  </body>
+</html>
