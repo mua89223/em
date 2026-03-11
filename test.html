@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>友善水稻耕作：福壽螺防治與生態平衡研究計畫</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Chosen Palette: Earthy Warmth (Off-white bg, Olive green accents, Dark brown text, soft red for warnings) -->
+    <!-- Application Structure Plan: 
+         1. Hero/Intro: Establishes the core philosophy (Eco-friendly, enzyme use, no chemicals).
+         2. The Challenge (Chart): Visualizes the critical vulnerability window of young seedlings. Justification: Helps users understand *when* action is most needed.
+         3. The Ecological Dilemma (Interactive UI): Explores the user's specific observation about grass piles on ridges. Justification: Directly addresses the core conflict between biodiversity and pest management.
+         4. Integrated Strategies (Tabs): Actionable steps (Trapping, Water management, Habitat tweaking). Justification: Categorizes information for easy consumption.
+         5. Research Plan Formulation (List/Cards): Structures the user's goal into a formal study plan. Justification: Turns observation into actionable scientific steps.
+    -->
+    <!-- Visualization & Content Choices: 
+         - Vulnerability Timeline -> Line Chart (Chart.js) -> Hover for details -> Shows the intersection of seedling age and snail threat.
+         - Habitat Analysis -> Interactive HTML/CSS Grid with state toggles -> Click to switch perspectives (Pros vs Cons) -> Visualizes the "Grass Pile" dilemma without SVG.
+         - Strategy Guide -> Tabbed Interface (Vanilla JS) -> Click to switch topics -> Organizes text-heavy methods cleanly.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        /* Custom Colors config for Tailwind */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'eco-bg': '#f4f1ea',
+                        'eco-text': '#3e3a32',
+                        'eco-green': '#6b8e6b',
+                        'eco-green-light': '#a3bca3',
+                        'eco-water': '#8baebd',
+                        'eco-danger': '#c87979',
+                        'eco-earth': '#8b7355'
+                    }
+                }
+            }
+        }
+
+        /* Chart Container Strict Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom UI Elements */
+        .tab-btn.active {
+            border-bottom: 4px solid #6b8e6b;
+            color: #6b8e6b;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Habitat Diagram Styles */
+        .habitat-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            height: 250px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 2px solid #a3bca3;
+        }
+        .ridge { background: linear-gradient(to bottom, #a3bca3 20%, #8b7355 80%); position: relative;}
+        .field { background: #8baebd; position: relative; }
+        .rice-plant { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-size: 3rem; }
+        .grass-pile { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 3rem; cursor: pointer; transition: transform 0.2s;}
+        .grass-pile:hover { transform: translateX(-50%) scale(1.1); }
+        
+        .indicator {
+            position: absolute;
+            background: rgba(255,255,255,0.9);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .show-pros .pro-indicator { display: block; color: #6b8e6b; }
+        .show-cons .con-indicator { display: block; color: #c87979; }
+    </style>
+</head>
+<body class="bg-eco-bg text-eco-text font-sans leading-relaxed tracking-wide">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-eco-bg/90 backdrop-blur-md border-b border-eco-green-light shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center font-bold text-xl text-eco-green">
+                    🌾 友善水稻生態網
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#challenge" class="text-eco-text hover:text-eco-green transition-colors">危機與挑戰</a>
+                    <a href="#dilemma" class="text-eco-text hover:text-eco-green transition-colors">生態兩難</a>
+                    <a href="#strategies" class="text-eco-text hover:text-eco-green transition-colors">共存策略</a>
+                    <a href="#research" class="font-semibold text-eco-green hover:text-eco-green-light transition-colors">📝 研究計畫</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header / Intro -->
+    <header class="max-w-4xl mx-auto px-4 py-16 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-eco-green mb-6 leading-tight">
+            不妥協的友善農法：<br>福壽螺與生態平衡之道
+        </h1>
+        <p class="text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+            我們堅持不使用農藥、化肥與苦茶粕，僅依賴環保酵素營造健康土壤。然而，面對前期福壽螺對嫩秧的巨大威脅，我們拒絕全面撲殺，而是尋求「誘捕」、「控管」與「生態共榮」的平衡點。
+        </p>
+        <div class="inline-flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200">
+            <span class="text-xl">💡</span>
+            <span class="font-medium">核心命題：如何在田埂雜草堆（生態棲地）與福壽螺防治間取得平衡？</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-24">
+
+        <!-- Section 1: The Challenge Chart -->
+        <section id="challenge" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-eco-text mb-4">第一階段：脆弱的嫩秧期</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    福壽螺的威脅並非貫穿整個生長期。插秧後的最初20天，是秧苗最脆弱、最容易被啃食的危險期。了解這個時間軸，是制定精準防治策略的基礎。
+                </p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="chart-container">
+                    <canvas id="timelineChart"></canvas>
+                </div>
+                <div class="mt-6 flex justify-center space-x-8 text-sm text-gray-500">
+                    <div class="flex items-center"><span class="w-3 h-3 bg-eco-green rounded-full mr-2"></span>秧苗抵抗力</div>
+                    <div class="flex items-center"><span class="w-3 h-3 bg-eco-danger rounded-full mr-2"></span>福壽螺危害程度</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Ecological Dilemma -->
+        <section id="dilemma" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-eco-text mb-4">生態的兩難：田埂草堆的秘密</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    我們觀察到，保留田埂上的草堆能為農田帶來豐富的生物多樣性。但這同時也可能成為老鼠的掩護，以及福壽螺產卵、躲藏的溫床。請點擊下方按鈕切換視角，探索草堆的雙面刃效應。
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                <!-- Interactive Controls -->
+                <div class="flex justify-center space-x-4 mb-8">
+                    <button onclick="toggleHabitat('pros')" id="btn-pros" class="px-6 py-2 rounded-full border-2 border-eco-green text-eco-green font-bold hover:bg-eco-green hover:text-white transition-colors">
+                        👀 觀察生態優勢
+                    </button>
+                    <button onclick="toggleHabitat('cons')" id="btn-cons" class="px-6 py-2 rounded-full border-2 border-gray-300 text-gray-500 font-bold hover:border-eco-danger hover:text-eco-danger transition-colors">
+                        ⚠️ 揭露防治盲點
+                    </button>
+                </div>
+
+                <!-- Interactive Diagram Area -->
+                <div id="habitat-interactive" class="relative max-w-3xl mx-auto show-pros">
+                    <div class="habitat-grid">
+                        <!-- Left: Ridge (田埂) -->
+                        <div class="ridge flex flex-col items-center justify-start pt-4">
+                            <span class="text-sm font-bold text-white mb-2 tracking-widest bg-black/30 px-2 rounded">田埂區</span>
+                            <!-- Grass Pile -->
+                            <div class="relative w-full h-24 flex justify-center items-end text-5xl cursor-help" title="點擊或切換按鈕觀察">
+                                🌿🌾🌿
+                                <!-- Indicators -->
+                                <div class="indicator pro-indicator top-[-30px] left-2">🕷️ 蜘蛛棲息地 (捕食害蟲)</div>
+                                <div class="indicator pro-indicator top-[20px] left-[-20px]">🐸 青蛙躲藏處</div>
+                                <div class="indicator con-indicator top-[-30px] right-2">🐌 福壽螺產卵處</div>
+                                <div class="indicator con-indicator top-[40px] right-[-10px]">🐀 老鼠洞穴掩護</div>
+                            </div>
+                        </div>
+                        <!-- Right: Field (水田) -->
+                        <div class="field flex items-end justify-around pb-4 border-l-4 border-eco-earth/50">
+                            <span class="absolute top-4 left-4 text-sm font-bold text-white tracking-widest bg-black/30 px-2 rounded">淺水田區</span>
+                            <div class="rice-plant relative">
+                                🌱
+                                <div class="indicator pro-indicator top-[-30px] left-10 text-xs w-32">水棲昆蟲繁衍，水質淨化</div>
+                                <div class="indicator con-indicator top-[-20px] left-10 text-xs w-32 border-l-2 border-eco-danger pl-2">秧苗易受水中螺類啃食</div>
+                            </div>
+                            <div class="text-3xl text-eco-text/60 relative">
+                                🐌
+                                <div class="indicator pro-indicator top-[-30px] left-[-40px] text-xs w-32">啃食雜草，提供自然除草功能 (後期)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dynamic Text Box -->
+                    <div id="habitat-desc" class="mt-6 p-4 rounded-lg bg-eco-green/10 text-eco-text border border-eco-green/30 min-h-[100px] flex items-center justify-center text-center">
+                        田埂上的草堆能維持微氣候的穩定，為蜘蛛、青蛙等益鳥益蟲提供絕佳的避難所，有助於建立農田的自然防禦機制。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Strategies (Tabs) -->
+        <section id="strategies" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-eco-text mb-4">共存與防治策略</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    在不破壞大環境的前提下，我們整合了物理誘捕與棲地管理的技巧，旨在將福壽螺的密度控制在「不造成經濟損害」的閾值之下。
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <!-- Tab Navigation -->
+                <div class="flex border-b border-gray-200">
+                    <button class="tab-btn active flex-1 py-4 text-center font-medium hover:bg-gray-50 transition-colors" onclick="switchTab(event, 'tab-trapping')">
+                        🍎 誘捕技巧
+                    </button>
+                    <button class="tab-btn flex-1 py-4 text-center font-medium text-gray-500 hover:bg-gray-50 transition-colors" onclick="switchTab(event, 'tab-water')">
+                        💧 水位管理
+                    </button>
+                    <button class="tab-btn flex-1 py-4 text-center font-medium text-gray-500 hover:bg-gray-50 transition-colors" onclick="switchTab(event, 'tab-habitat')">
+                        🌿 棲地微調
+                    </button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="p-8">
+                    <!-- Tab 1: Trapping -->
+                    <div id="tab-trapping" class="tab-content active">
+                        <h3 class="text-2xl font-bold text-eco-green mb-4">精準誘捕，集中移除</h3>
+                        <div class="grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <p class="mb-4 text-gray-700">利用福壽螺嗅覺靈敏且貪食的特性，在插秧前及初期設置誘餌陷阱。這能有效降低田間基礎螺口密度。</p>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">✔️</span>
+                                        <span><strong>素材選擇：</strong> 高麗菜葉、米糠糰、木瓜葉、廢棄菜葉等發酵氣味強烈的植物。</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">✔️</span>
+                                        <span><strong>陷阱設置：</strong> 將誘餌放置於田區進水口、低窪積水處，或使用竹筏/網袋固定。</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">✔️</span>
+                                        <span><strong>最佳時機：</strong> 傍晚佈放，清晨巡視並集中撈除（可作為堆肥或家禽飼料）。</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="bg-eco-bg p-6 rounded-lg text-center border border-dashed border-eco-green">
+                                <div class="text-4xl mb-2">🥬 🪤 🐌</div>
+                                <p class="text-sm text-gray-600 font-bold">誘捕區佈局示意：集中於周邊及深水處</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Water -->
+                    <div id="tab-water" class="tab-content">
+                        <h3 class="text-2xl font-bold text-eco-green mb-4">控制水源，限制行動</h3>
+                        <div class="grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <p class="mb-4 text-gray-700">福壽螺的移動與進食高度依賴水。透過精準的水位控制，可以有效保護稚嫩的秧苗。</p>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">✔️</span>
+                                        <span><strong>插秧初期「淺水/曬田」：</strong> 保持田面濕潤但無明顯積水（1公分以下）。福壽螺在無水狀態下活動力銳減，無法爬上秧苗。</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">✔️</span>
+                                        <span><strong>開溝引水：</strong> 在田間開出較深的排水溝（環溝或十字溝）。當田面排水時，福壽螺會本能地退回深水溝中，此時便於集中誘捕或撈除。</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">✔️</span>
+                                        <span><strong>後期深水：</strong> 待秧苗成長至分櫱期（約30天後），莖部變硬，此時加深水位，福壽螺反而會轉而啃食田間的鮮嫩雜草，成為除草幫手。</span>
+                                    </li>
+                                </ul>
+                            </div>
+                             <div class="bg-eco-water/20 p-6 rounded-lg text-center border-b-4 border-eco-water flex flex-col justify-end h-full">
+                                <div class="flex justify-between items-end mb-2 border-b-2 border-blue-300 pb-2 relative">
+                                    <span class="text-3xl relative top-2">🌱</span>
+                                    <span class="text-xl relative bottom-2">🐌 (困於溝中)</span>
+                                </div>
+                                <p class="text-sm text-gray-700 font-bold mt-4">溝渠深水誘捕法</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Habitat -->
+                    <div id="tab-habitat" class="tab-content">
+                        <h3 class="text-2xl font-bold text-eco-green mb-4">梳理草堆，打破溫床</h3>
+                        <div class="grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <p class="mb-4 text-gray-700">針對您觀察到的「田埂草堆兩難」，我們不建議全面清除，而是採取「微調」策略，保留生態價值的同時減少病蟲害風險。</p>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <span class="mr-2">✔️</span>
+                                        <span><strong>斑塊化保留 (Patchwork)：</strong> 不要讓草堆連綿整個田埂。每隔一段距離留下一叢草，形成「生態島」，既提供躲藏處，又阻斷老鼠的連續通道。</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">✔️</span>
+                                        <span><strong>底部淨空：</strong> 定期清理草堆與水面接觸的底部區域。福壽螺產卵通常在水面上方的植物莖桿上，清除接觸水面的雜草能減少產卵附著點。</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="mr-2">✔️</span>
+                                        <span><strong>人工摘卵：</strong> 在巡田時，將田埂草堆上醒目的粉紅色卵塊摘除並壓碎，從源頭控制數量。</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="bg-eco-green-light/20 p-6 rounded-lg text-center">
+                                <div class="flex justify-around items-center h-24 mb-2">
+                                    <div class="text-2xl">🌿</div>
+                                    <div class="text-sm text-gray-400">--- 間距 ---</div>
+                                    <div class="text-2xl">🌿</div>
+                                    <div class="text-sm text-gray-400">--- 間距 ---</div>
+                                    <div class="text-2xl">🌿</div>
+                                </div>
+                                <p class="text-sm text-gray-700 font-bold">斑塊化草堆管理示意</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Research Plan -->
+        <section id="research" class="scroll-mt-24">
+            <div class="bg-eco-green/10 rounded-3xl p-8 md:p-12 border border-eco-green/20">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-eco-green mb-4">研究計畫擴編提案：生態平衡實驗</h2>
+                    <p class="text-gray-700 max-w-3xl mx-auto">
+                        為了解決田埂草堆的兩難，建議在您的研究計畫中加入以下量化觀察實驗，以科學數據找出最佳的棲地管理模式。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Phase 1 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-eco-earth">
+                        <div class="text-4xl mb-4">📊</div>
+                        <h4 class="text-xl font-bold text-eco-text mb-2">實驗一：棲地模式對照</h4>
+                        <p class="text-sm text-gray-600 mb-4">劃分試驗田區，比較三種田埂管理方式的影響。</p>
+                        <ul class="text-sm text-gray-700 space-y-2 list-disc pl-4">
+                            <li>組A：傳統全覆蓋草堆</li>
+                            <li>組B：斑塊化草堆 (間隔1公尺)</li>
+                            <li>組C：底部修剪淨空草堆</li>
+                            <li class="text-eco-danger font-bold">測量：各區秧苗折損率、鼠洞數量、福壽螺卵塊數。</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-eco-water">
+                        <div class="text-4xl mb-4">🥬</div>
+                        <h4 class="text-xl font-bold text-eco-text mb-2">實驗二：誘餌效益評估</h4>
+                        <p class="text-sm text-gray-600 mb-4">測試在地可取得之資材，尋找最高效的誘捕配方。</p>
+                        <ul class="text-sm text-gray-700 space-y-2 list-disc pl-4">
+                            <li>比較：米糠糰 vs. 廢棄菜葉 vs. 綜合酵素渣</li>
+                            <li>於定點定時佈放陷阱</li>
+                            <li class="text-eco-danger font-bold">測量：不同誘餌的捕獲數量與捕獲螺徑大小。</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-eco-green">
+                        <div class="text-4xl mb-4">🐸</div>
+                        <h4 class="text-xl font-bold text-eco-text mb-2">實驗三：指標生物監測</h4>
+                        <p class="text-sm text-gray-600 mb-4">確保防治手段並未扼殺田間原有的生態活力。</p>
+                        <ul class="text-sm text-gray-700 space-y-2 list-disc pl-4">
+                            <li>定期夜間巡視或設置相機</li>
+                            <li>記錄田埂區域之生態活動</li>
+                            <li class="text-eco-danger font-bold">測量：青蛙、蜘蛛、水生昆蟲的出現頻率與種類豐富度。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-eco-text text-white py-8 text-center">
+        <p class="text-sm text-gray-400">友善耕作單頁應用範例 | 結合數據、生態觀察與實務管理</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Chart.js Implementation ---
+        const initChart = () => {
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+            
+            // Data representing the first 40 days
+            const labels = ['Day 0 (插秧)', 'Day 5', 'Day 10', 'Day 15', 'Day 20 (分櫱期)', 'Day 30', 'Day 40'];
+            // Vulnerability drops as stems harden
+            const vulnData = [95, 90, 75, 50, 20, 5, 0]; 
+            // Snail activity might remain constant or vary by water, but threat level correlates to seedling age
+            const snailThreat = [90, 85, 80, 60, 30, 0, 0]; // Effectively the damage potential
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '秧苗受損風險 (%)',
+                            data: snailThreat,
+                            borderColor: '#c87979',
+                            backgroundColor: 'rgba(200, 121, 121, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: '秧苗莖部強韌度 (抵抗力)',
+                            data: [5, 10, 25, 50, 80, 95, 100],
+                            borderColor: '#6b8e6b',
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) { label += context.parsed.y + '%'; }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: '程度 (%)' }
+                        },
+                        x: {
+                            title: { display: true, text: '插秧後天數' }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        };
+
+        // --- Interactive Habitat Logic ---
+        const toggleHabitat = (state) => {
+            const interactiveArea = document.getElementById('habitat-interactive');
+            const descBox = document.getElementById('habitat-desc');
+            const btnPros = document.getElementById('btn-pros');
+            const btnCons = document.getElementById('btn-cons');
+
+            if (state === 'pros') {
+                interactiveArea.classList.remove('show-cons');
+                interactiveArea.classList.add('show-pros');
+                
+                // Style buttons
+                btnPros.classList.replace('border-gray-300', 'border-eco-green');
+                btnPros.classList.replace('text-gray-500', 'text-eco-green');
+                btnCons.classList.replace('border-eco-danger', 'border-gray-300');
+                btnCons.classList.replace('text-eco-danger', 'text-gray-500');
+
+                descBox.className = 'mt-6 p-4 rounded-lg bg-eco-green/10 text-eco-text border border-eco-green/30 min-h-[100px] flex items-center justify-center text-center transition-colors';
+                descBox.innerHTML = '<strong>生態優勢：</strong>田埂上的草堆能維持微氣候的穩定，為蜘蛛、青蛙等益鳥益蟲提供絕佳的避難所，有助於建立農田的自然防禦機制（捕食小型害蟲）。';
+            } else {
+                interactiveArea.classList.remove('show-pros');
+                interactiveArea.classList.add('show-cons');
+                
+                // Style buttons
+                btnCons.classList.replace('border-gray-300', 'border-eco-danger');
+                btnCons.classList.replace('text-gray-500', 'text-eco-danger');
+                btnPros.classList.replace('border-eco-green', 'border-gray-300');
+                btnPros.classList.replace('text-eco-green', 'text-gray-500');
+
+                descBox.className = 'mt-6 p-4 rounded-lg bg-eco-danger/10 text-eco-text border border-eco-danger/30 min-h-[100px] flex items-center justify-center text-center transition-colors';
+                descBox.innerHTML = '<strong>防治盲點：</strong>過於茂密且連續的草堆，容易遮蔽老鼠洞穴阻礙巡查；同時，靠近水面的草堆莖桿，也是福壽螺產卵（粉紅卵塊）的最愛附著點。';
+            }
+        };
+
+        // --- Tab Logic ---
+        const switchTab = (evt, tabId) => {
+            // Hide all content
+            const contents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+            
+            // Deactivate all buttons
+            const btns = document.getElementsByClassName('tab-btn');
+            for (let i = 0; i < btns.length; i++) {
+                btns[i].classList.remove('active', 'border-eco-green', 'text-eco-green');
+                btns[i].classList.add('text-gray-500');
+            }
+            
+            // Show current tab, activate button
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+            evt.currentTarget.classList.remove('text-gray-500');
+            evt.currentTarget.classList.add('text-eco-green');
+        };
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initChart();
+        });
+
+    </script>
+</body>
+</html>
