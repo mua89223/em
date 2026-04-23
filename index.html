@@ -500,60 +500,182 @@
                         hoverOffset: 4
                     }]
                 },
-                 <!-- Section 5: Methodology (New Content) -->
-                 <section id="methodology" class="scroll-mt-20">
-                <div class="mb-10 text-center">
-                    <h2 class="text-3xl font-bold text-dark mb-4">三、影像製作方法論：感知建立</h2>
-                        <p class="text-gray-600 max-w-2xl mx-auto mb-8">
-                    政治信任透過長期觀看形成的感知累積。本手法以「人物感知」為核心，運用以下 8 大技術要點確保影片的「非表演性」。
-                        </p>
-                </div>
+        <!-- Section 3: Methodology (The requested New Content) -->
+        <section id="methodology" class="scroll-mt-20">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-dark mb-4">三、影像製作方法論與拍攝手法</h2>
+                <p class="text-gray-600 max-w-3xl mx-auto mb-10">
+                    政治信任是透過長期觀看形成的感知累積。我們採用「低介入拍攝」與「情境優先」，保留不完美以強化真實性。
+                </p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+                    <!-- Methods Radar -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <h4 class="font-bold text-center mb-6">核心手法執行強度權重</h4>
+                        <div class="h-[400px]">
+                            <canvas id="methodChart"></canvas>
+                        </div>
+                    </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center">
-                    <h3 class="font-bold text-lg mb-4">方法論執行強度分析</h3>
-                    <div class="chart-container" style="height: 400px; width: 100%;">
-                        <canvas id="methodChart"></canvas>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-4 italic">※ 以 1-10 分評估該手法在最終呈現中的預期權重</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-y-auto max-h-[500px] pr-2 no-scrollbar">
-                    <div class="method-card bg-teal-50 p-5 rounded-xl border border-teal-100">
-                        <h4 class="font-bold text-primary mb-2">① 觀察式拍攝</h4>
-                        <p class="text-xs text-gray-600">不主導、不重來、不設計。強調「這個人是真實存在的」。</p>
-                    </div>
-                    <div class="method-card bg-orange-50 p-5 rounded-xl border border-orange-100">
-                        <h4 class="font-bold text-secondary mb-2">② 行動中對話</h4>
-                        <p class="text-xs text-gray-600">對話發生在買菜、走路中。減少坐下訪談的嚴肅表演感。</p>
-                    </div>
-                    <div class="method-card bg-blue-50 p-5 rounded-xl border border-blue-100">
-                        <h4 class="font-bold text-blue-600 mb-2">③ 側拍視角</h4>
-                        <p class="text-xs text-gray-600">使用中長焦鏡頭，避免直視。讓觀眾感覺「偷看到真實」。</p>
-                    </div>
-                    <div class="method-card bg-gray-50 p-5 rounded-xl border border-gray-200">
-                        <h4 class="font-bold text-dark mb-2">④ 不完美保留</h4>
-                        <p class="text-xs text-gray-600">保留停頓、笑場、思考空白。強化「真實的人不會講得剛剛好」。</p>
-                    </div>
-                    <div class="method-card bg-purple-50 p-5 rounded-xl border border-purple-100">
-                        <h4 class="font-bold text-purple-600 mb-2">⑤ 情緒留白</h4>
-                        <p class="text-xs text-gray-600">不做結論旁白。在情緒最高點結束，引發共鳴與留言互動。</p>
-                    </div>
-                    <div class="method-card bg-pink-50 p-5 rounded-xl border border-pink-100">
-                        <h4 class="font-bold text-pink-600 mb-2">⑥ 關係優先</h4>
-                        <p class="text-xs text-gray-600">拍雙人互動而非個人。從他與誰相處，定義他是誰。</p>
-                    </div>
-                    <div class="method-card bg-yellow-50 p-5 rounded-xl border border-yellow-100">
-                        <h4 class="font-bold text-yellow-700 mb-2">⑦ 日常場景優先</h4>
-                        <p class="text-xs text-gray-600">選擇家、市場。運用自然光與環境聲，建立極高親近感。</p>
-                    </div>
-                    <div class="method-card bg-green-50 p-5 rounded-xl border border-green-100">
-                        <h4 class="font-bold text-green-700 mb-2">⑧ 微事件敘事</h4>
-                        <p class="text-xs text-gray-600">不講大道理，只聚焦一個微小瞬間。容易觀看且易分享。</p>
+                    <!-- Method Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-2 no-scrollbar">
+                        <div class="method-card bg-white p-5 rounded-xl border-l-4 border-teal-500 shadow-sm">
+                            <h5 class="font-bold text-primary">① 觀察式拍攝</h5>
+                            <p class="text-xs text-gray-500 mt-2 italic">「這個人是真實存在的，而非安排出來的。」</p>
+                            <p class="text-xs text-gray-700 mt-2">鏡頭跟隨事件不主導、不要求重來、不刻意引導情緒。</p>
+                        </div>
+                        <div class="method-card bg-white p-5 rounded-xl border-l-4 border-orange-500 shadow-sm">
+                            <h5 class="font-bold text-secondary">② 行動中對話</h5>
+                            <p class="text-xs text-gray-500 mt-2 italic">「最真實的狀態是在生活之中。」</p>
+                            <p class="text-xs text-gray-700 mt-2">拒絕坐下訪談。所有對話在買菜、走路、工作過程中發生。</p>
+                        </div>
+                        <div class="method-card bg-white p-5 rounded-xl border-l-4 border-blue-500 shadow-sm">
+                            <h5 class="font-bold text-blue-600">③ 側拍視角</h5>
+                            <p class="text-xs text-gray-500 mt-2 italic">「觀眾不是被說服，而是看一段人生。」</p>
+                            <p class="text-xs text-gray-700 mt-2">多用長焦（50-85mm），避免直視鏡頭，捕捉旁觀者視角。</p>
+                        </div>
+                        <div class="method-card bg-white p-5 rounded-xl border-l-4 border-slate-500 shadow-sm">
+                            <h5 class="font-bold text-slate-700">④ 不完美保留</h5>
+                            <p class="text-xs text-gray-500 mt-2 italic">「真實的人，不會講得剛剛好。」</p>
+                            <p class="text-xs text-gray-700 mt-2">保留停頓、笑場、思考空白。不修正語病，不過度修剪。</p>
+                        </div>
+                        <div class="method-card bg-white p-5 rounded-xl border-l-4 border-purple-500 shadow-sm">
+                            <h5 class="font-bold text-purple-600">⑤ 情緒留白</h5>
+                            <p class="text-xs text-gray-500 mt-2 italic">「讓觀眾參與理解，而非被告知答案。」</p>
+                            <p class="text-xs text-gray-700 mt-2">不做結論性旁白。在情緒最高點突然結束，引發思考。</p>
+                        </div>
+                        <div class="method-card bg-white p-5 rounded-xl border-l-4 border-pink-500 shadow-sm">
+                            <h5 class="font-bold text-pink-600">⑥ 關係優先</h5>
+                            <p class="text-xs text-gray-500 mt-2 italic">「一個人是誰，來自他與誰相處。」</p>
+                            <p class="text-xs text-gray-700 mt-2">多拍雙人互動，少單人特寫。從社交情境呈現真實人格。</p>
+                        </div>
+                        <div class="method-card bg-white p-5 rounded-xl border-l-4 border-yellow-500 shadow-sm">
+                            <h5 class="font-bold text-yellow-600">⑦ 日常場景優先</h5>
+                            <p class="text-xs text-gray-500 mt-2 italic">「真正的性格，只會出現在日常。」</p>
+                            <p class="text-xs text-gray-700 mt-2">選擇家、市場、街道。自然光拍攝，保留環境現場音。</p>
+                        </div>
+                        <div class="method-card bg-white p-5 rounded-xl border-l-4 border-green-500 shadow-sm">
+                            <h5 class="font-bold text-green-600">⑧ 微事件敘事</h5>
+                            <p class="text-xs text-gray-500 mt-2 italic">「信任來自小細節的累積。」</p>
+                            <p class="text-xs text-gray-700 mt-2">不講大故事。每支短片只聚焦一個瞬間（如幫忙搬東西）。</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- Section 4: Schedule -->
+        <section id="schedule" class="scroll-mt-20">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-dark mb-4">四、拍攝期程規劃</h2>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-300 before:to-transparent">
+                        
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-300 group-[.is-active]:bg-primary text-slate-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">✨</div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border border-gray-100 bg-light shadow-sm">
+                                <div class="flex items-center justify-between space-x-2 mb-1">
+                                    <div class="font-bold text-dark">4月：素材庫建立與觀察期</div>
+                                    <time class="font-mono text-xs text-primary font-bold">Phase 1</time>
+                                </div>
+                                <div class="text-gray-600 text-sm">大量觀察式側拍（B-roll）。拍攝協會工作、辦公室日常、家庭對談，建立真實感基調。</div>
+                            </div>
+                        </div>
+
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-300 group-[.is-active]:bg-secondary text-slate-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">🎙️</div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border border-gray-100 bg-light shadow-sm">
+                                <div class="flex items-center justify-between space-x-2 mb-1">
+                                    <div class="font-bold text-dark">5月：議題對話與專業產出</div>
+                                    <time class="font-mono text-xs text-secondary font-bold">Phase 2</time>
+                                </div>
+                                <div class="text-gray-600 text-sm">行動中對話系列。導入「白板解密」預算學堂，呈現無黨籍監督者的專業高度。</div>
+                            </div>
+                        </div>
+
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-300 text-slate-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">🚀</div>
+                            <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border border-gray-100 bg-light shadow-sm">
+                                <div class="flex items-center justify-between space-x-2 mb-1">
+                                    <div class="font-bold text-dark">6月：願景整合與傳播擴散</div>
+                                    <time class="font-mono text-xs text-gray-400 font-bold">Phase 3</time>
+                                </div>
+                                <div class="text-gray-600 text-sm">未來篇敘事。整合過去與現在，轉化為具體的親子教育與家庭政策願景。</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-dark text-white py-12 text-center">
+        <div class="max-w-6xl mx-auto px-4">
+            <p class="text-lg font-bold mb-4">信任源於真實。讓我們記錄上帝編導的精彩一生。</p>
+            <p class="text-xs text-gray-500">© 2024 李伯利牧師競選辦公室 | 影像方法論備忘錄</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(tabId) {
+            ['past', 'present', 'future'].forEach(id => {
+                document.getElementById('content-' + id).classList.add('hidden');
+                document.getElementById('btn-' + id).classList.remove('active', 'text-dark');
+                document.getElementById('btn-' + id).classList.add('text-gray-500');
+            });
+            document.getElementById('content-' + tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active', 'text-dark');
+        }
+
+        window.onload = function() {
+            // Strategy Radar Chart
+            new Chart(document.getElementById('strategyChart').getContext('2d'), {
+                type: 'radar',
+                data: {
+                    labels: ['真實性', '互動性', '生活感', '專業度', '效率'],
+                    datasets: [{
+                        label: '傳統包裝',
+                        data: [4, 5, 3, 9, 7],
+                        backgroundColor: 'rgba(156, 163, 175, 0.2)',
+                        borderColor: 'rgba(156, 163, 175, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: '李牧師(感知法)',
+                        data: [10, 9, 10, 8, 9],
+                        backgroundColor: 'rgba(13, 148, 136, 0.2)',
+                        borderColor: '#0d9488',
+                        borderWidth: 2
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Method Polar Chart
+            new Chart(document.getElementById('methodChart').getContext('2d'), {
+                type: 'polarArea',
+                data: {
+                    labels: ['觀察拍攝', '行動對話', '側拍視角', '不完美保留', '情緒留白', '關係優先', '日常優先', '微敘事'],
+                    datasets: [{
+                        data: [10, 9, 8, 9, 7, 8, 9, 10],
+                        backgroundColor: [
+                            'rgba(13, 148, 136, 0.6)', 
+                            'rgba(249, 115, 22, 0.6)', 
+                            'rgba(37, 99, 235, 0.6)', 
+                            'rgba(100, 116, 139, 0.6)',
+                            'rgba(147, 51, 234, 0.6)', 
+                            'rgba(219, 39, 119, 0.6)', 
+                            'rgba(202, 138, 4, 0.6)', 
+                            'rgba(22, 163, 74, 0.6)'
+                        ]
+                    }]
+                },
+
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
