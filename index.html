@@ -66,6 +66,7 @@
     2. 戰略分析區：透過雷達圖對比傳統政治人物，視覺化呈現為何選擇「真實無包裝」路線。
     3. 敘事三部曲 (互動頁籤)：將冗長的自傳轉換為「過去、現在、未來」三個可切換的模塊，方便團隊聚焦各階段的腳本核心。
     4. 拍攝期程與腳本 (時間軸與卡片)：將 4-6 月的抽象計畫具象化為可執行的任務清單，讓使用者(候選人與團隊)一目瞭然何時該做什麼。
+    5. 方法論深度解析 (新增)：視覺化 8 大拍攝手法，將抽象理念轉化為執行指標。
     -->
 
     <!-- Visualization & Content Choices: 
@@ -73,6 +74,7 @@
     2. 敘事結構 (互動Tabs): 目標-整理李牧師豐富背景。方法-點擊切換文字與重點卡片。
     3. 內容分佈規劃 (甜甜圈圖 - Chart.js): 目標-展示短影音/長片/直播的資源分配。
     4. 拍攝期程 (純HTML/CSS垂直時間軸): 目標-清晰呈現4,5,6月進度。互動-Hover卡片浮現。無SVG。
+     5. 影像方法論 (極座標圖 - Chart.js): 展示 8 項手法在製作中的重要性分布。
     -->
 
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
@@ -89,6 +91,7 @@
                     <a href="#narrative" class="text-gray-600 hover:text-primary transition-colors">敘事三部曲</a>
                     <a href="#schedule" class="text-gray-600 hover:text-primary transition-colors">拍攝期程</a>
                     <a href="#execution" class="text-gray-600 hover:text-primary transition-colors">具體腳本</a>
+                    <a href="#methodology" class="text-gray-600 hover:text-primary transition-colors">方法論</a>
                 </div>
             </div>
         </div>
@@ -386,7 +389,60 @@
                 </div>
             </div>
         </section>
+<!-- Section 5: Methodology (New Content) -->
+        <section id="methodology" class="scroll-mt-20">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-dark mb-4">三、影像製作方法論：感知建立</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto mb-8">
+                    政治信任透過長期觀看形成的感知累積。本手法以「人物感知」為核心，運用以下 8 大技術要點確保影片的「非表演性」。
+                </p>
+            </div>
 
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center">
+                    <h3 class="font-bold text-lg mb-4">方法論執行強度分析</h3>
+                    <div class="chart-container" style="height: 400px; width: 100%;">
+                        <canvas id="methodChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4 italic">※ 以 1-10 分評估該手法在最終呈現中的預期權重</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-y-auto max-h-[500px] pr-2 no-scrollbar">
+                    <div class="method-card bg-teal-50 p-5 rounded-xl border border-teal-100">
+                        <h4 class="font-bold text-primary mb-2">① 觀察式拍攝</h4>
+                        <p class="text-xs text-gray-600">不主導、不重來、不設計。強調「這個人是真實存在的」。</p>
+                    </div>
+                    <div class="method-card bg-orange-50 p-5 rounded-xl border border-orange-100">
+                        <h4 class="font-bold text-secondary mb-2">② 行動中對話</h4>
+                        <p class="text-xs text-gray-600">對話發生在買菜、走路中。減少坐下訪談的嚴肅表演感。</p>
+                    </div>
+                    <div class="method-card bg-blue-50 p-5 rounded-xl border border-blue-100">
+                        <h4 class="font-bold text-blue-600 mb-2">③ 側拍視角</h4>
+                        <p class="text-xs text-gray-600">使用中長焦鏡頭，避免直視。讓觀眾感覺「偷看到真實」。</p>
+                    </div>
+                    <div class="method-card bg-gray-50 p-5 rounded-xl border border-gray-200">
+                        <h4 class="font-bold text-dark mb-2">④ 不完美保留</h4>
+                        <p class="text-xs text-gray-600">保留停頓、笑場、思考空白。強化「真實的人不會講得剛剛好」。</p>
+                    </div>
+                    <div class="method-card bg-purple-50 p-5 rounded-xl border border-purple-100">
+                        <h4 class="font-bold text-purple-600 mb-2">⑤ 情緒留白</h4>
+                        <p class="text-xs text-gray-600">不做結論旁白。在情緒最高點結束，引發共鳴與留言互動。</p>
+                    </div>
+                    <div class="method-card bg-pink-50 p-5 rounded-xl border border-pink-100">
+                        <h4 class="font-bold text-pink-600 mb-2">⑥ 關係優先</h4>
+                        <p class="text-xs text-gray-600">拍雙人互動而非個人。從他與誰相處，定義他是誰。</p>
+                    </div>
+                    <div class="method-card bg-yellow-50 p-5 rounded-xl border border-yellow-100">
+                        <h4 class="font-bold text-yellow-700 mb-2">⑦ 日常場景優先</h4>
+                        <p class="text-xs text-gray-600">選擇家、市場。運用自然光與環境聲，建立極高親近感。</p>
+                    </div>
+                    <div class="method-card bg-green-50 p-5 rounded-xl border border-green-100">
+                        <h4 class="font-bold text-green-700 mb-2">⑧ 微事件敘事</h4>
+                        <p class="text-xs text-gray-600">不講大道理，只聚焦一個微小瞬間。容易觀看且易分享。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="bg-dark text-white py-8 border-t border-gray-800 text-center">
