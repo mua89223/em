@@ -3,153 +3,515 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>農田守護者：稻之試煉</title>
-    <style>
-        :root {
-            --primary: #4CAF50;
-            --secondary: #8BC34A;
-            --danger: #FF5252;
-            --info: #2196F3;
-            --bg: #F1F8E9;
+    <title>李伯利牧師競選影音企劃 | 台南選區</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: 溫暖基調 (Warm Neutrals) 搭配 信任青綠 (Trust Teal) 與 活力暖橘 (Energetic Orange)，呈現台南在地人情味與牧師的清新、真實感。 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0d9488', // Teal 600
+                        secondary: '#f97316', // Orange 500
+                        dark: '#1e293b', // Slate 800
+                        light: '#f8fafc', // Slate 50
+                        surface: '#ffffff',
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: #333; display: flex; justify-content: center; padding: 20px; }
-        #game-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 500px; width: 100%; }
-        .stats-bar { display: flex; justify-content: space-around; background: #E8F5E9; padding: 15px; border-radius: 10px; margin-bottom: 20px; position: sticky; top: 0; }
-        .stat { text-align: center; font-weight: bold; }
-        .event-card { border: 2px solid var(--secondary); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        .option-btn { display: block; width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; transition: 0.3s; background: #f0f0f0; }
-        .option-btn:hover { background: var(--secondary); color: white; }
-        .hidden { display: none; }
-        .result-item { margin: 10px 0; font-size: 18px; }
-        #feedback { font-style: italic; color: #666; margin-top: 15px; border-left: 4px solid var(--primary); padding-left: 10px; }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        
+        /* 嚴格的圖表容器樣式約束 */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+
+        /* 隱藏滾動條但保持可滾動 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .tab-btn.active {
+            border-bottom: 4px solid #0d9488;
+            color: #0d9488;
+            font-weight: bold;
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body>
+<body class="bg-light text-dark antialiased">
 
-<div id="game-container">
-    <h2>🌾 農田守護者：稻之試煉</h2>
-    
-    <div class="stats-bar">
-        <div class="stat">💰 金幣<br><span id="coins">10</span></div>
-        <div class="stat">❤️ 愛心<br><span id="hearts">5</span></div>
-        <div class="stat">🌾 產量<br><span id="yield">0</span></div>
-    </div>
+    <!-- Application Structure Plan: 
+    採用「戰略儀表板與互動簡報」混合架構。
+    理由：影片企劃需要具備高度的「說服力」與「執行力」。
+    1. 首頁/導覽：快速定調「柯式風格」應用於李牧師的核心概念。
+    2. 戰略分析區：透過雷達圖對比傳統政治人物，視覺化呈現為何選擇「真實無包裝」路線。
+    3. 敘事三部曲 (互動頁籤)：將冗長的自傳轉換為「過去、現在、未來」三個可切換的模塊，方便團隊聚焦各階段的腳本核心。
+    4. 拍攝期程與腳本 (時間軸與卡片)：將 4-6 月的抽象計畫具象化為可執行的任務清單，讓使用者(候選人與團隊)一目瞭然何時該做什麼。
+    -->
 
-    <div id="game-play">
-        <h3 id="stage-title">階段 1：育苗與打田</h3>
-        <p id="stage-desc">春天來了，你要如何準備你的土地？</p>
-        <div id="options">
+    <!-- Visualization & Content Choices: 
+    1. 核心風格對比 (雷達圖 - Chart.js): 目標-說明柯式社群打法優勢。互動-Hover顯示數值。無SVG。
+    2. 敘事結構 (互動Tabs): 目標-整理李牧師豐富背景。方法-點擊切換文字與重點卡片。
+    3. 內容分佈規劃 (甜甜圈圖 - Chart.js): 目標-展示短影音/長片/直播的資源分配。
+    4. 拍攝期程 (純HTML/CSS垂直時間軸): 目標-清晰呈現4,5,6月進度。互動-Hover卡片浮現。無SVG。
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center font-bold text-xl text-primary tracking-wider">
+                    🎥 李伯利牧師｜影音戰略室
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#strategy" class="text-gray-600 hover:text-primary transition-colors">風格戰略</a>
+                    <a href="#narrative" class="text-gray-600 hover:text-primary transition-colors">敘事三部曲</a>
+                    <a href="#schedule" class="text-gray-600 hover:text-primary transition-colors">拍攝期程</a>
+                    <a href="#execution" class="text-gray-600 hover:text-primary transition-colors">具體腳本</a>
+                </div>
             </div>
-    </div>
+        </div>
+    </nav>
 
-    <div id="game-over" class="hidden">
-        <h3>🎉 年度收成報告</h3>
-        <div id="results"></div>
-        <div id="feedback"></div>
-        <button class="option-btn" onclick="location.reload()" style="background: var(--primary); color: white;">重新挑戰</button>
-    </div>
-</div>
+    <!-- Hero Section -->
+    <header class="bg-white border-b border-gray-200 pt-16 pb-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-black text-dark mb-4 tracking-tight">上帝是大導演，我們只負責<span class="text-primary">真實呈現</span>。</h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
+                台南選區無黨籍參選人——李伯利牧師 競選影音企劃書。<br>
+                結合「柯文哲式」的社群透明度與高互動性，將牧師「浪子回頭、真實無偽、敢說真話」的特質，轉化為最強的社群擴散力。拍攝期程鎖定選前冷靜期（4-6月），建立深厚人設。
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="#schedule" class="bg-primary text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-teal-700 transition-all transform hover:-translate-y-1">查看拍攝期程 📅</a>
+                <a href="#narrative" class="bg-orange-100 text-secondary px-6 py-3 rounded-full font-semibold hover:bg-orange-200 transition-all">探索故事腳本 📖</a>
+            </div>
+        </div>
+    </header>
 
-<script>
-    let state = { coins: 10, hearts: 5, yield: 0, stage: 0 };
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-24">
 
-    const stages = [
-        {
-            title: "第一關：育苗與下肥",
-            desc: "鄰居都在用化肥，長得又快又美。你的選擇是？",
-            options: [
-                { text: "慣行：強效化肥 (-1💰, -1❤️)", calc: () => { state.coins -= 1; state.hearts -= 1; state.yield += 10; } },
-                { text: "有機：有機堆肥 (-3💰, +1❤️)", calc: () => { state.coins -= 3; state.hearts += 1; state.yield += 8; } },
-                { text: "自然：覆蓋乾草 (-0💰, +2❤️)", calc: () => { state.hearts += 2; state.yield += 5; } }
-            ]
-        },
-        {
-            title: "第二關：螺害危機",
-            desc: "警告！福壽螺正在吃秧苗！",
-            options: [
-                { text: "慣行：噴灑藥劑 (-1💰, -2❤️)", calc: () => { state.coins -= 1; state.hearts -= 2; } },
-                { text: "有機：手工撿螺 (-4💰, +0❤️)", calc: () => { state.coins -= 4; } },
-                { text: "自然：合鴨共生 (-2💰, +1❤️)", calc: () => { 
-                    state.coins -= 2; 
-                    if(Math.random() > 0.3) { state.hearts += 1; } else { state.yield -= 2; alert("喔不！鴨子罷工，產量稍微下降了"); }
-                } }
-            ]
-        },
-        {
-            title: "第三關：病蟲害與天氣",
-            desc: "梅雨季來臨，稻熱病爆發了！",
-            options: [
-                { text: "慣行：強效殺菌 (-1💰, -1❤️)", calc: () => { state.coins -= 1; state.hearts -= 1; } },
-                { text: "有機：木醋液防護 (-3💰, +0❤️)", calc: () => { state.coins -= 3; } },
-                { text: "自然：觀察不處理 (-0💰)", calc: () => { 
-                    if(state.hearts < 6) { state.yield -= 4; alert("因為土地不夠健康，病蟲害造成了損失"); }
-                } }
-            ]
+        <!-- Section 1: Strategy -->
+        <section id="strategy" class="scroll-mt-20">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-dark mb-4">一、社群戰略：借鏡「柯式風格」</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    本區塊分析為何採用柯文哲的社群經營手法。揚棄傳統政治人物的高級包裝、華麗讀稿機，改採「低門檻、高真實、快節奏」的拍攝策略。李牧師本身的戲劇化經歷（黑道到牧師）與直言不諱的性格，完美契合此一操作模式。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                <div>
+                    <h3 class="text-2xl font-bold text-primary mb-4">打破常規的「真實感」操作</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-2xl mr-3">📱</span>
+                            <div>
+                                <h4 class="font-bold text-dark">第一視角與側拍 (B-Roll) 為主</h4>
+                                <p class="text-gray-600 text-sm">不看讀稿機。大量使用團隊跟拍視角、邊走邊說 (Walk & Talk)，展現「不完美但極度真實」的日常。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-2xl mr-3">🧑‍🏫</span>
+                            <div>
+                                <h4 class="font-bold text-dark">白板開講與預算解密</h4>
+                                <p class="text-gray-600 text-sm">借鏡柯P的白板教學，李牧師可以拿著麥克筆，在辦公室白板上拆解台南 1200 億預算，建立「理性監督者」形象。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-2xl mr-3">🛵</span>
+                            <div>
+                                <h4 class="font-bold text-dark">庶民生活Vlog</h4>
+                                <p class="text-gray-600 text-sm">還原「與太太騎機車、戴90元安全帽」的真實生活，吃平民美食直播QA，拉近與選民距離。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <!-- Chart Container 1 -->
+                    <div class="chart-container">
+                        <canvas id="strategyChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-4">▲ 傳統政客與李牧師(柯式操作)的屬性對比</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Narrative 3 Acts -->
+        <section id="narrative" class="scroll-mt-20">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-dark mb-4">二、敘事三部曲：候選人 IP 建立</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    將牧師精彩的五萬字自傳，濃縮為三個可視化的影音階段。此區塊展示影片內容的核心主軸，使用者可點擊下方頁籤，探索不同階段的腳本重點與傳達訊息。
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <!-- Tabs -->
+                <div class="flex border-b border-gray-200">
+                    <button onclick="switchTab('past')" id="btn-past" class="tab-btn active flex-1 py-4 text-center font-medium hover:bg-gray-50 transition-colors">第一階段：過去 (真實的我)</button>
+                    <button onclick="switchTab('present')" id="btn-present" class="tab-btn flex-1 py-4 text-center text-gray-500 font-medium hover:bg-gray-50 transition-colors">第二階段：現在 (行動的我)</button>
+                    <button onclick="switchTab('future')" id="btn-future" class="tab-btn flex-1 py-4 text-center text-gray-500 font-medium hover:bg-gray-50 transition-colors">第三階段：未來 (願景的我)</button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="p-8">
+                    <!-- Past -->
+                    <div id="content-past" class="fade-in block">
+                        <div class="flex flex-col md:flex-row gap-8 items-start">
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold text-secondary mb-3">從黑道到牧師的「浪子回頭」</h3>
+                                <p class="text-gray-700 leading-relaxed mb-4">
+                                    <strong>核心訴求：</strong>不怕檢視、願意為信念付上代價的韌性。<br>
+                                    <strong>故事背景：</strong>父親是司機、母親做美容。因為母親嚴格的愛而叛逆離家，走入黑道與走私。隨後經歷信仰洗禮，從月入百萬跌落到連加20元買飲料都沒錢，與太太騎機車戴90元安全帽度日。
+                                </p>
+                                <div class="bg-orange-50 border-l-4 border-secondary p-4 rounded text-sm text-gray-700">
+                                    💡 <strong>柯式操作法：</strong>以「老照片回顧」加上「邊走邊聊」的訪談方式，不煽情、不賣慘，用輕鬆甚至帶點自嘲的語氣談論荒唐過去，展現坦蕩蕩的格局。
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/3 bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                <h4 class="font-bold text-dark mb-2">預計拍攝格式</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li>🎥 10分鐘深度微紀錄片 (YT主打)</li>
+                                    <li>📱 3-4支 短影音 Shorts (擷取精華金句)</li>
+                                    <li>🎙️ Podcast 式純對談畫面</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Present -->
+                    <div id="content-present" class="fade-in hidden">
+                        <div class="flex flex-col md:flex-row gap-8 items-start">
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold text-primary mb-3">在地深耕與「真實不作假」</h3>
+                                <p class="text-gray-700 leading-relaxed mb-4">
+                                    <strong>核心訴求：</strong>超脫藍綠白，以專業與實際行動服務台南。<br>
+                                    <strong>故事背景：</strong>創辦新發協會、保護動物協會。介紹全台最豪華(但花費極少)的神秘辦公室。探討研究所專業「社會邊緣人的成長歷程」。堅持無黨籍，拒絕三大黨招攬，只為民意發聲。
+                                </p>
+                                <div class="bg-teal-50 border-l-4 border-primary p-4 rounded text-sm text-gray-700">
+                                    💡 <strong>柯式操作法：</strong>「開箱辦公室」Vlog，展現用最少預算做最高質感的「省錢能力」。以「工作日常側拍」展現不分黨派處理選民服務的真實狀況。
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/3 bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                <h4 class="font-bold text-dark mb-2">預計拍攝格式</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li>🎥 辦公室開箱導覽 Vlog</li>
+                                    <li>📱 「為什麼我不入黨？」1分鐘快問快答</li>
+                                    <li>📸 協會日常服務紀錄片</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Future -->
+                    <div id="content-future" class="fade-in hidden">
+                        <div class="flex flex-col md:flex-row gap-8 items-start">
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold text-blue-600 mb-3">議會防腐劑與「教育推手」</h3>
+                                <p class="text-gray-700 leading-relaxed mb-4">
+                                    <strong>核心訴求：</strong>專業監督預算，推動無利益衝突的法案。<br>
+                                    <strong>政策主軸：</strong>台南市一年1200億預算監督。親子教育普及化、青少年與婚損諮商。無黨籍如何運作？只要沒有利益衝突，不與兩黨交惡，法案就能推動。
+                                </p>
+                                <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded text-sm text-gray-700">
+                                    💡 <strong>柯式操作法：</strong>「拿白板講政策」！把枯燥的1200億預算畫成圖表，教民眾看懂政府的錢花去哪。舉辦「青年客廳會」直播，接受辛辣提問，展現有料的政策論述。
+                                </div>
+                            </div>
+                            <div class="w-full md:w-1/3 bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                <h4 class="font-bold text-dark mb-2">預計拍攝格式</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li>🎥 白板預算小學堂 (系列影片)</li>
+                                    <li>📱 政策懶人包動畫搭配真人配音</li>
+                                    <li>🔴 午餐吃便當 QA 直播</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Schedule -->
+        <section id="schedule" class="scroll-mt-20">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-dark mb-4">三、黃金拍攝期程：避開選戰泥淖 (4~6月)</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    不靠近選舉熱戰期，在四至六月提早佈局，用充裕的時間拍攝高品質、具深度的內容。此區塊以時間軸方式列出各月份的拍攝目標與社群發布策略。
+                </p>
+            </div>
+
+            <div class="relative max-w-4xl mx-auto">
+                <!-- Vertical Line -->
+                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 transform md:-translate-x-1/2"></div>
+
+                <!-- April -->
+                <div class="relative z-10 flex flex-col md:flex-row items-center mb-12 group">
+                    <div class="md:w-1/2 md:pr-12 text-left md:text-right mb-4 md:mb-0 pl-12 md:pl-0">
+                        <h3 class="text-2xl font-bold text-primary">四月：素材庫與人設建立</h3>
+                        <p class="text-gray-600 mt-2">著重於「第一階段(過去)」與「第二階段(現在)日常」。無需過度企劃，以跟拍、採集真實畫面為主。</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold transform md:-translate-x-1/2 border-4 border-white shadow-md">4</div>
+                    <div class="md:w-1/2 md:pl-12 pl-12">
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li>📌 <strong>執行項目：</strong>10分鐘自傳紀錄片訪談錄影。</li>
+                                <li>📌 <strong>B-roll 收集：</strong>辦公室開箱、騎機車掃街、協會工作側拍。</li>
+                                <li>📌 <strong>社群產出：</strong>每週2支15秒預告短影音，測試水溫。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- May -->
+                <div class="relative z-10 flex flex-col md:flex-row-reverse items-center mb-12 group">
+                    <div class="md:w-1/2 md:pl-12 text-left mb-4 md:mb-0 pl-12">
+                        <h3 class="text-2xl font-bold text-secondary">五月：議題深化與白板開講</h3>
+                        <p class="text-gray-600 mt-2">轉入「第三階段(未來)」。政策需要教育選民，將複雜議題轉化為白板教學或圖表。</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center font-bold transform md:-translate-x-1/2 border-4 border-white shadow-md">5</div>
+                    <div class="md:w-1/2 md:pr-12 pl-12 md:pl-0 text-left md:text-right">
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li>📌 <strong>執行項目：</strong>「台南1200億去哪了」白板解說錄製。</li>
+                                <li>📌 <strong>深度訪談：</strong>家庭教育、青少年諮商政策的專業論述。</li>
+                                <li>📌 <strong>社群產出：</strong>釋出主紀錄片，並開始每週發布「政策小學堂」短影片。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- June -->
+                <div class="relative z-10 flex flex-col md:flex-row items-center group">
+                    <div class="md:w-1/2 md:pr-12 text-left md:text-right mb-4 md:mb-0 pl-12 md:pl-0">
+                        <h3 class="text-2xl font-bold text-blue-600">六月：高互動與社群爆發</h3>
+                        <p class="text-gray-600 mt-2">將前兩期的素材大量剪輯為短影音，並加入即時互動元素，塑造網路聲量基礎。</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold transform md:-translate-x-1/2 border-4 border-white shadow-md">6</div>
+                    <div class="md:w-1/2 md:pl-12 pl-12">
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow">
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li>📌 <strong>執行項目：</strong>辛辣 QA 快問快答錄製、街頭訪問收集。</li>
+                                <li>📌 <strong>直播企劃：</strong>首次便當直播，測試觀眾提問與即時反應。</li>
+                                <li>📌 <strong>社群產出：</strong>短影音日更(或做一休一)，擴大觸及率，準備迎接選戰期。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Content Distribution & Execution -->
+        <section id="execution" class="scroll-mt-20 mb-20">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-dark mb-4">四、拍攝產出配比與具體腳本</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    影像資源必須精準投放。透過圖表了解不同類型影片的製作配比，並提供立即可執行的腳本框架，確保拍攝當天團隊目標一致。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Chart -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center">
+                    <h3 class="font-bold text-lg text-dark mb-4 text-center">影音內容產出配比 (總量)</h3>
+                    <!-- Chart Container 2 -->
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="contentChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4 text-center">以短影音為矛(觸及)，長影音為盾(人設)，直播為連結(固粉)。</p>
+                </div>
+
+                <!-- Execution Cards -->
+                <div class="col-span-1 lg:col-span-2 space-y-4">
+                    <!-- Script Card 1 -->
+                    <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:border-primary transition-colors cursor-pointer" onclick="toggleScript('script1')">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-lg text-primary flex items-center">🎬 腳本 A：全台最神祕辦公室開箱 (Vlog短片) <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded ml-2">四月拍攝</span></h4>
+                            <span class="text-gray-400">▼</span>
+                        </div>
+                        <div id="script1" class="hidden mt-4 pt-4 border-t border-gray-100 text-sm text-gray-700">
+                            <p><strong>場景：</strong>地圖村改造辦公室。</p>
+                            <p><strong>畫面：</strong>攝影師手持手機/穩定器跟隨。牧師推開門，用導覽員口吻介紹。</p>
+                            <p><strong>核心台詞：</strong>「很多人說這全台最豪華，其實我們花超少錢。政治也是一樣，1200億預算怎麼花在刀口上，你看這辦公室就知道。」</p>
+                            <p><strong>重點：</strong>展現質感與預算控制能力，帶出「好議員能省預算」的特質。</p>
+                        </div>
+                    </div>
+
+                    <!-- Script Card 2 -->
+                    <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:border-secondary transition-colors cursor-pointer" onclick="toggleScript('script2')">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-lg text-secondary flex items-center">🎙️ 腳本 B：黑道到牧師的告白 (長訪談精華) <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded ml-2">四月拍攝</span></h4>
+                            <span class="text-gray-400">▼</span>
+                        </div>
+                        <div id="script2" class="hidden mt-4 pt-4 border-t border-gray-100 text-sm text-gray-700">
+                            <p><strong>場景：</strong>純色背景或溫馨書房，單機位雙視角。</p>
+                            <p><strong>畫面：</strong>半身特寫，眼神看鏡頭旁(與導演對話)。插入機車雙載的B-roll。</p>
+                            <p><strong>核心台詞：</strong>「我以前月入百萬，後來窮到連加20元飲料的錢都沒有。買90元的安全帽，但我太太願意跟我一起戴。為了信念，我付過代價，現在為了台南，我同樣敢付代價。」</p>
+                            <p><strong>重點：</strong>真誠展露脆弱與堅韌，打破完美政治人物包裝。</p>
+                        </div>
+                    </div>
+
+                    <!-- Script Card 3 -->
+                    <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:border-blue-600 transition-colors cursor-pointer" onclick="toggleScript('script3')">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-lg text-blue-600 flex items-center">🧑‍🏫 腳本 C：白板上的 1200 億 (政策解說) <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded ml-2">五月拍攝</span></h4>
+                            <span class="text-gray-400">▼</span>
+                        </div>
+                        <div id="script3" class="hidden mt-4 pt-4 border-t border-gray-100 text-sm text-gray-700">
+                            <p><strong>場景：</strong>辦公室大白板前。</p>
+                            <p><strong>畫面：</strong>牧師拿白板筆，快速畫圓餅圖與流程圖。畫面可適度快轉，加上綜藝字卡。</p>
+                            <p><strong>核心台詞：</strong>「大家知道台南一年預算1200億嗎？分給180萬人，這筆錢是這樣流動的...只要我無黨籍進去，沒有政黨利益包袱，我保證這條線(指著教育預算)能確實落實到家庭教育裡。」</p>
+                            <p><strong>重點：</strong>展現專業度與柯P式的理性邏輯，強調無黨籍優勢。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-dark text-white py-8 border-t border-gray-800 text-center">
+        <p class="text-sm text-gray-400">本企劃為台南選區李伯利牧師專屬客製化戰略報告。<br>核心精神：上帝是大導演，我們真實呈現。</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. 頁籤切換邏輯 (Tabs) ---
+        function switchTab(tabId) {
+            // 隱藏所有內容
+            document.getElementById('content-past').classList.add('hidden');
+            document.getElementById('content-present').classList.add('hidden');
+            document.getElementById('content-future').classList.add('hidden');
+            
+            // 移除所有按鈕的 active 狀態，並重置文字顏色
+            const btns = ['btn-past', 'btn-present', 'btn-future'];
+            btns.forEach(id => {
+                document.getElementById(id).classList.remove('active');
+                document.getElementById(id).classList.add('text-gray-500');
+                document.getElementById(id).classList.remove('text-dark');
+            });
+
+            // 顯示選中內容
+            document.getElementById('content-' + tabId).classList.remove('hidden');
+            
+            // 設置選中按鈕樣式
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('text-gray-500');
+            activeBtn.classList.add('text-dark');
         }
-    ];
 
-    function updateDisplay() {
-        document.getElementById('coins').innerText = state.coins;
-        document.getElementById('hearts').innerText = state.hearts;
-        document.getElementById('yield').innerText = state.yield;
-    }
-
-    function renderStage() {
-        if (state.stage >= stages.length) {
-            showGameOver();
-            return;
+        // --- 2. 手風琴腳本切換 (Accordion) ---
+        function toggleScript(scriptId) {
+            const el = document.getElementById(scriptId);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                el.classList.add('fade-in');
+            } else {
+                el.classList.add('hidden');
+                el.classList.remove('fade-in');
+            }
         }
-        const s = stages[state.stage];
-        document.getElementById('stage-title').innerText = s.title;
-        document.getElementById('stage-desc').innerText = s.desc;
-        const optDiv = document.getElementById('options');
-        optDiv.innerHTML = '';
-        s.options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt.text;
-            btn.onclick = () => {
-                opt.calc();
-                state.stage++;
-                updateDisplay();
-                renderStage();
-            };
-            optDiv.appendChild(btn);
+
+        // --- 3. Chart.js 圖表渲染 ---
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Chart 1: 雷達圖 (風格對比)
+            const ctxStrategy = document.getElementById('strategyChart').getContext('2d');
+            new Chart(ctxStrategy, {
+                type: 'radar',
+                data: {
+                    labels: ['真實無包裝', '腳本精緻度', '社群互動性', '生活化(B-roll)', '論述直白度'],
+                    datasets: [{
+                        label: '傳統政治人物',
+                        data: [4, 9, 5, 3, 4],
+                        backgroundColor: 'rgba(156, 163, 175, 0.2)',
+                        borderColor: 'rgba(156, 163, 175, 1)',
+                        pointBackgroundColor: 'rgba(156, 163, 175, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: '李牧師 (柯式操作)',
+                        data: [10, 4, 9, 8, 9],
+                        backgroundColor: 'rgba(13, 148, 136, 0.2)', // Primary Teal
+                        borderColor: 'rgba(13, 148, 136, 1)',
+                        pointBackgroundColor: 'rgba(13, 148, 136, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 10,
+                            ticks: { display: false } // Hide numbers for cleaner look
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + '/10';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: 甜甜圈圖 (內容配比)
+            const ctxContent = document.getElementById('contentChart').getContext('2d');
+            new Chart(ctxContent, {
+                type: 'doughnut',
+                data: {
+                    labels: ['短影音 Shorts/Reels (打觸及)', 'Vlog/生活紀錄片 (建人設)', '政策解說長片 (拼專業)', '社群直播 QA (固鐵粉)'],
+                    datasets: [{
+                        data: [45, 25, 20, 10],
+                        backgroundColor: [
+                            '#0d9488', // Teal
+                            '#f97316', // Orange
+                            '#2563eb', // Blue
+                            '#64748b'  // Slate
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: { boxWidth: 12, padding: 10, font: { size: 11 } }
+                        }
+                    }
+                }
+            });
         });
-    }
-
-    function showGameOver() {
-        document.getElementById('game-play').className = 'hidden';
-        document.getElementById('game-over').className = '';
-        
-        let price = 1;
-        let growthMindsetMsg = "";
-        
-        if (state.hearts >= 7) { 
-            price = 5; 
-            growthMindsetMsg = "【永續大師】你證明了守護土地雖然慢，但價值最高 (Price x5)！Growth Mindset: 為了長遠目標，你展現了極大的耐心。";
-        } else if (state.hearts >= 4) { 
-            price = 3; 
-            growthMindsetMsg = "【友善農夫】你找到了平衡點 (Price x3)。Growth Mindset: 持續在挑戰中調整策略，你做得很棒！";
-        } else { 
-            price = 1; 
-            growthMindsetMsg = "【產量先鋒】雖然賺了錢，但土地累壞了 (Price x1)。Growth Mindset: 這次的數據告訴我們，過度依賴藥劑會失去未來的競爭力，下次試試養土吧！";
-        }
-
-        if (state.hearts <= 0) { state.yield = 0; growthMindsetMsg = "【土地倒下】愛心歸零，土地無法再生產了。這次的失敗是最珍貴的教訓，想想看哪個環節可以改進？"; }
-
-        const total = (state.yield * price) + state.coins;
-        document.getElementById('results').innerHTML = `
-            <div class="result-item">最終產量：${state.yield}</div>
-            <div class="result-item">收購單價：$${price}</div>
-            <div class="result-item"><strong>最終總收益：$${total}</strong></div>
-        `;
-        document.getElementById('feedback').innerText = growthMindsetMsg;
-    }
-
-    updateDisplay();
-    renderStage();
-</script>
-
+    </script>
 </body>
 </html>
