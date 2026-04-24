@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <!--網頁標題 -->
     <title>李伯利牧師競選影音企劃</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -25,6 +26,7 @@
             }
         }
     </script>
+     <!--網頁樣式 -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
@@ -46,7 +48,7 @@
             font-weight: bold;
         }
 
-        /* 甘特圖樣式保持 */
+        /* 甘特圖樣式 */
         .gantt-container { overflow-x: auto; }
         .gantt-table { width: 100%; min-width: 800px; border-collapse: collapse; }
         .gantt-th { background-color: #1e293b; color: white; padding: 12px; border: 1px solid #334155; }
@@ -55,6 +57,8 @@
         .tab-btn.active { border-bottom: 4px solid #0d9488; color: #0d9488; font-weight: bold; }
     </style>
 </head>
+
+<!-- 網頁內容 -->
 <body class="bg-light text-dark antialiased">
 
     <nav class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
@@ -66,10 +70,10 @@
                 </div>
                 <!-- 分頁選擇 -->
                 <div class="hidden md:flex space-x-6">
-                    <button onclick="showPage('strategy')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">風格戰略</button>
-                    <button onclick="showPage('narrative')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">敘事三部曲</button>
-                    <button onclick="showPage('execution')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">具體腳本</button>
-                    <button onclick="showPage('overview')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">影音甘特圖</button>
+                    <button onclick="showPage('strategy')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">社群戰略</button>
+                    <button onclick="showPage('narrative')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">敘事方式</button>
+                    <button onclick="showPage('execution')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">拍攝腳本</button>
+                    <button onclick="showPage('overview')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">備選影音甘特圖</button>
                 </div>
             </div>
         </div>
