@@ -630,6 +630,27 @@
                     plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }
                 }
             });
+            window.onload = function() {
+            new Chart(document.getElementById('strategyChart').getContext('2d'), {
+                type: 'radar',
+                data: {
+                    labels: ['透明度', '互動性', '生活感', '專業度', '效率'],
+                    datasets: [{
+                        label: '傳統包裝',
+                        data: [4, 5, 3, 9, 7],
+                        backgroundColor: 'rgba(156, 163, 175, 0.2)',
+                        borderColor: 'rgba(156, 163, 175, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: '李牧師(反包裝)',
+                        data: [10, 9, 10, 8, 9],
+                        backgroundColor: 'rgba(13, 148, 136, 0.2)',
+                        borderColor: '#0d9488',
+                        borderWidth: 2
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
             // Chart 2: 甜甜圈圖 (內容配比)
             const ctxContent = document.getElementById('contentChart').getContext('2d');
             new Chart(ctxContent, {
