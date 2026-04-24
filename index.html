@@ -60,9 +60,11 @@
     <nav class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex justify-between h-16 items-center">
+                <!-- 標題 -->
                 <div class="flex-shrink-0 font-bold text-xl text-primary cursor-pointer" onclick="showPage('hero')">
-                    🎥 李伯利牧師｜影音戰略室
+                    🎥 競選影片規劃｜李伯利牧師
                 </div>
+                <!-- 分頁選擇 -->
                 <div class="hidden md:flex space-x-6">
                     <button onclick="showPage('strategy')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">風格戰略</button>
                     <button onclick="showPage('narrative')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">敘事三部曲</button>
@@ -73,9 +75,11 @@
         </div>
     </nav>
 
+    <!--首頁內容 -->
     <main id="page-hero" class="page-content active">
         <header class="bg-white border-b border-gray-200 pt-20 pb-16">
             <div class="max-w-6xl mx-auto px-4 text-center">
+                <!--首頁標題 -->
                 <h1 class="text-4xl md:text-5xl font-black text-dark mb-6">上帝是大導演，我們只負責<span class="text-primary">真實呈現</span>。</h1>
                 <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed">
                     關於這次的影像計畫這不是一份傳統的競選影音規劃，而是一段關於「一個人如何被看見」的紀錄。
@@ -83,29 +87,71 @@
                     從日常生活、家庭關係到面對社會的行動，影像將跟隨其生活節奏自然發生，讓觀眾在觀看的過程中，逐步認識這個人。
                     整體規劃自5月至11月，透過三個階段的內容累積，從情感連結、信任建立到支持轉化，讓理解成為支持的基礎。
                 </p>
-            <div class="bg-dark text-white p-10 rounded-3xl shadow-xl">
-                <h2 class="text-3xl font-bold mb-8 flex items-center">
-                    <span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">01</span>
-                    核心專案願景與品牌定位
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div class="space-y-6">
-                        <h3 class="text-xl font-bold text-primary">戰略背景：意外的透明度</h3>
-                        <p class="text-gray-300">選民對精緻包裝已產生免疫。李伯利的獨特性在於其坦率，我們將負面過往定義為「上帝是大導演」劇本中的真實角色。</p>
+            </div>
+            <!--中間框框 -->
+            <div class="vision-gradient text-white p-8 md:p-12 rounded-3xl shadow-xl overflow-hidden relative">
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-bold mb-6 flex items-center">
+                        <span class="bg-white text-primary w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">01</span>
+                        核心專案願景與品牌定位：敘事霸權
+                    </h2>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-xl font-bold text-teal-300 mb-2">1.1 戰略背景：意外的透明度</h3>
+                                <p class="text-gray-200 text-sm leading-relaxed">
+                                    選民對精緻包裝已產生免疫。李伯利的獨特性在於其投身政治前，因福音工作已將過往「赤露敞開」。這種<span class="text-white font-bold">「因沒想過要從政，所以笨到沒去隱瞞」</span>的坦率，是極強大的信任槓桿。我們將負面過往定義為「上帝是大導演」劇本中的真實角色，建立徹底的「誠實主權」。
+                                </p>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-teal-300 mb-2">1.3 品牌差異化：反包裝戰略</h3>
+                                <p class="text-gray-200 text-sm leading-relaxed">
+                                    傳統追求「編劇式偽裝」，我們定位為「反包裝」。將黑道歷程轉化為「專業社會觀察者」，將痛苦轉化為對社會邊緣與高成就家庭盲區的深刻洞察。這是在展示一個經過火煉、具備管理意志的<span class="text-white font-bold">「守門員」</span>。
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                <div class="bg-white/10 p-6 rounded-2xl border border-white/20">
-                    <h3 class="font-bold mb-4">品牌差異化：反包裝戰略</h3>
-                    <p class="text-sm text-gray-300">將黑道歷程轉化為「專業社會觀察者」，展示一個經過火煉、具備管理意志的「守門員」。</p>
-                </div>
-            </div>
-        </div>
-                
-            </div>
+
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                        <h3 class="text-lg font-bold mb-4 flex items-center">
+                                1.2 心理錨點與選民對接
+                        </h3>
+                            <!-- 表格 -->
+                            <div class="space-y-3">
+                                <div class="grid grid-cols-3 gap-2 py-2 border-b border-white/10 text-xs">
+                                    <div class="font-bold text-teal-200">品牌特質</div>
+                                    <div class="font-bold text-teal-200">戰略價值</div>
+                                    <div class="font-bold text-teal-200">目標受眾</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 py-2 border-b border-white/10 text-[10px] sm:text-xs">
+                                    <div class="font-bold">極端韌性</div>
+                                    <div class="text-gray-300">債務中存活即能守住財政<br>(壓力測試證明)</div>
+                                    <div class="text-gray-300">中間選民/專業人士</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 py-2 border-b border-white/10 text-[10px] sm:text-xs">
+                                    <div class="font-bold">高共情力</div>
+                                    <div class="text-gray-300">透過母親與家庭的真實互動，瓦解政治高牆。<br>(去階級化連結)</div>
+                                    <div class="text-gray-300">年輕家長/一般家庭</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 py-2 border-b border-white/10 text-[10px] sm:text-xs">
+                                    <div class="font-bold">無黨債信</div>
+                                    <div class="text-gray-300">無黨包袱，省下黨派利息<br>(誠信投報率 (ROI))</div>
+                                    <div class="text-gray-300">理性選民 (預算關注)</div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 py-2 text-[10px] sm:text-xs">
+                                    <div class="font-bold">開拓者精神</div>
+                                    <div class="text-gray-300">從廢墟中重建秩序<br>(從零到一的執行力)</div>
+                                    <div class="text-gray-300">尋求改變的開拓者</div>
+                                </div>
+                        </div>
+                    </div>
+                </div>            
         </header>
     </main>
 
 
-
+ <!--分頁２：社群戰略 -->
     <main id="page-strategy" class="page-content max-w-6xl mx-auto px-4 py-12">
         <h2 class="text-3xl font-bold text-center mb-10">二、社群戰略：真實感操作</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center bg-white p-8 rounded-2xl shadow-sm border">
