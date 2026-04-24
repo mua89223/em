@@ -31,7 +31,19 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
         
-        .chart-container { position: relative; width: 100%; max-width: 600px; margin: auto; height: 300px; }
+
+        /* 嚴格的圖表容器樣式約束 */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
         
         /* 分頁切換動畫 */
         .page-content { display: none; }
@@ -55,6 +67,32 @@
         .gantt-td { background-color: white; border: 1px solid #e2e8f0; padding: 10px; text-align: center; }
         
         .tab-btn.active { border-bottom: 4px solid #0d9488; color: #0d9488; font-weight: bold; }
+
+
+        /* 隱藏滾動條但保持可滾動 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .tab-btn.active {
+            border-bottom: 4px solid #0d9488;
+            color: #0d9488;
+            font-weight: bold;
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .method-card { transition: all 0.3s ease; }
+        .method-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        .vision-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #0d9488 100%);
+            
+        .dot-past { color: #0d9488; font-size: 1.5rem; }
+        .dot-present { color: #2563eb; font-size: 1.5rem; }
+        .dot-future { color: #e11d48; font-size: 1.5rem; }
+
+        .phase-card { transition: transform 0.2s; }
+        .phase-card:hover { transform: translateY(-4px); }
     </style>
 </head>
 
