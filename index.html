@@ -270,32 +270,55 @@
     <!--備選甘特圖 -->
     <main id="page-overview" class="page-content max-w-6xl mx-auto px-4 py-12">
         <!-- 第一部分 -->
-        <h2 class="text-3xl font-bold text-center mb-10">影像策略期程</h2>
-        <div class="gantt-container bg-white p-6 rounded-2xl shadow-sm border">
+        <div class="flex items-center space-x-3 mb-8">
+            <span class="bg-teal-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold">01</span>
+            <h3 class="text-2xl font-black text-slate-800">影像策略時間軸（主題推進）</h3>
+        </div>
+        <!-- 甘特圖 -->    
+        <div class="gantt-container">
             <table class="gantt-table">
                 <thead>
                     <tr>
-                        <th class="gantt-th">主題 / 月份</th>
+                        <th class="gantt-th">月份 / 主題</th>
                         <th class="gantt-th">5月</th>
                         <th class="gantt-th">6月</th>
                         <th class="gantt-th">7月</th>
                         <th class="gantt-th">8月</th>
+                        <th class="gantt-th">9月</th>
+                        <th class="gantt-th">10月</th>
+                        <th class="gantt-th">11月</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="gantt-td font-bold">過去 (故事)</td>
-                        <td class="gantt-td text-primary font-bold">●●● 主軸</td>
-                        <td class="gantt-td">●●</td>
-                        <td class="gantt-td">●</td>
-                        <td class="gantt-td">-</td>
+                        <td class="gantt-td gantt-label border-l-4 border-teal-500">過去 (故事背景)</td>
+                        <td class="gantt-td"><span class="dot-past">●●●</span><br><span class="text-[10px] text-teal-600 font-bold">主軸</span></td>
+                        <td class="gantt-td"><span class="dot-past">●●</span><br><span class="text-[10px] text-slate-400">收束</span></td>
+                        <td class="gantt-td"><span class="dot-past">●</span><br><span class="text-[10px] text-slate-300">補充</span></td>
+                        <td class="gantt-td text-slate-300">-</td>
+                        <td class="gantt-td text-slate-300">-</td>
+                        <td class="gantt-td text-slate-300">-</td>
+                        <td class="gantt-td text-slate-300">-</td>
                     </tr>
                     <tr>
-                        <td class="gantt-td font-bold">現在 (行動)</td>
-                        <td class="gantt-td">●</td>
-                        <td class="gantt-td">●●</td>
-                        <td class="gantt-td text-blue-600 font-bold">●●● 主軸</td>
-                        <td class="gantt-td text-blue-600 font-bold">●●● 深化</td>
+                        <td class="gantt-td gantt-label border-l-4 border-blue-500">現在 (行動日常)</td>
+                        <td class="gantt-td"><span class="dot-present">●</span><br><span class="text-[10px] text-slate-400">鋪墊</span></td>
+                        <td class="gantt-td"><span class="dot-present">●●</span><br><span class="text-[10px] text-slate-400">開始</span></td>
+                        <td class="gantt-td"><span class="dot-present">●●●</span><br><span class="text-[10px] text-blue-600 font-bold">主軸</span></td>
+                        <td class="gantt-td"><span class="dot-present">●●●</span><br><span class="text-[10px] text-blue-600 font-bold">深化</span></td>
+                        <td class="gantt-td"><span class="dot-present">●●</span><br><span class="text-[10px] text-slate-400">維持</span></td>
+                        <td class="gantt-td"><span class="dot-present">●</span><br><span class="text-[10px] text-slate-400">輔助</span></td>
+                        <td class="gantt-td"><span class="dot-present">●</span><br><span class="text-[10px] text-slate-400">輔助</span></td>
+                    </tr>
+                    <tr>
+                        <td class="gantt-td gantt-label border-l-4 border-rose-500">未來 (政策治理)</td>
+                        <td class="gantt-td text-slate-300">-</td>
+                        <td class="gantt-td text-slate-300">-</td>
+                        <td class="gantt-td"><span class="dot-future">●</span><br><span class="text-[10px] text-slate-400">試水</span></td>
+                        <td class="gantt-td"><span class="dot-future">●●</span><br><span class="text-[10px] text-slate-400">建立</span></td>
+                        <td class="gantt-td"><span class="dot-future">●●●</span><br><span class="text-[10px] text-rose-600 font-bold">主軸</span></td>
+                        <td class="gantt-td"><span class="dot-future">●●●</span><br><span class="text-[10px] text-rose-600 font-bold">深化</span></td>
+                        <td class="gantt-td"><span class="dot-future">●●●</span><br><span class="text-[10px] text-rose-600 font-bold">轉化</span></td>
                     </tr>
                 </tbody>
             </table>
