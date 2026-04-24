@@ -123,7 +123,7 @@
                 <div class="relative z-10">
                     <h2 class="text-3xl font-bold mb-6 flex items-center">
                         <span class="bg-white text-primary w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">01</span>
-                        核心專案願景與品牌定位：敘事霸權
+                        一、核心專案願景與品牌定位：敘事霸權
                     </h2>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -184,7 +184,7 @@
         <!-- Section 1: Strategy -->
         <section id="strategy" class="scroll-mt-20">
             <div class="mb-10 text-center">
-                <h2 class="text-3xl font-bold text-dark mb-4">一、社群戰略：借鏡「柯式風格」</h2>
+                <h2 class="text-3xl font-bold text-dark mb-4">二、社群戰略：借鏡「柯式風格」</h2>
                 <p class="text-gray-600 max-w-2xl mx-auto">
                     本區塊分析為何採用柯文哲的社群經營手法。揚棄傳統政治人物的高級包裝、華麗讀稿機，改採「低門檻、高真實、快節奏」的拍攝策略。李牧師本身的戲劇化經歷（黑道到牧師）與直言不諱的性格，完美契合此一操作模式。
                 </p>
@@ -230,7 +230,7 @@
         <!-- Section 2: Narrative 3 Acts -->
         <section id="narrative" class="scroll-mt-20">
             <div class="mb-10 text-center">
-                <h2 class="text-3xl font-bold text-dark mb-4">二、敘事三部曲：候選人 IP 建立</h2>
+                <h2 class="text-3xl font-bold text-dark mb-4">三、敘事三部曲：候選人 IP 建立</h2>
                 <p class="text-gray-600 max-w-2xl mx-auto">
                     將牧師精彩的五萬字自傳，濃縮為三個可視化的影音階段。此區塊展示影片內容的核心主軸，使用者可點擊下方頁籤，探索不同階段的腳本重點與傳達訊息。
                 </p>
@@ -324,7 +324,7 @@
         <!-- Section 3: Schedule -->
         <section id="schedule" class="scroll-mt-20">
             <div class="mb-10 text-center">
-                <h2 class="text-3xl font-bold text-dark mb-4">三、黃金拍攝期程：避開選戰泥淖 (4~6月)</h2>
+                <h2 class="text-3xl font-bold text-dark mb-4">四、黃金拍攝期程：避開選戰泥淖 (4~6月)</h2>
                 <p class="text-gray-600 max-w-2xl mx-auto">
                     不靠近選舉熱戰期，在四至六月提早佈局，用充裕的時間拍攝高品質、具深度的內容。此區塊以時間軸方式列出各月份的拍攝目標與社群發布策略。
                 </p>
@@ -393,7 +393,7 @@
         <!-- Section 4: Content Distribution & Execution -->
         <section id="execution" class="scroll-mt-20 mb-20">
             <div class="mb-10 text-center">
-                <h2 class="text-3xl font-bold text-dark mb-4">四、拍攝產出配比與具體腳本</h2>
+                <h2 class="text-3xl font-bold text-dark mb-4">五、拍攝產出配比與具體腳本</h2>
                 <p class="text-gray-600 max-w-2xl mx-auto">
                     影像資源必須精準投放。透過圖表了解不同類型影片的製作配比，並提供立即可執行的腳本框架，確保拍攝當天團隊目標一致。
                 </p>
@@ -459,7 +459,7 @@
 <!-- Section 5: Methodology (New Content) -->
         <section id="methodology" class="scroll-mt-20">
             <div class="mb-10 text-center">
-                <h2 class="text-3xl font-bold text-dark mb-4">五、影像製作方法論：感知建立</h2>
+                <h2 class="text-3xl font-bold text-dark mb-4">六、影像製作方法論：感知建立</h2>
                 <p class="text-gray-600 max-w-2xl mx-auto mb-8">
                     政治信任透過長期觀看形成的感知累積。本手法以「人物感知」為核心，運用以下 8 大技術要點確保影片的「非表演性」。
                 </p>
@@ -630,27 +630,7 @@
                     plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }
                 }
             });
-            window.onload = function() {
-            new Chart(document.getElementById('strategyChart').getContext('2d'), {
-                type: 'radar',
-                data: {
-                    labels: ['透明度', '互動性', '生活感', '專業度', '效率'],
-                    datasets: [{
-                        label: '傳統包裝',
-                        data: [4, 5, 3, 9, 7],
-                        backgroundColor: 'rgba(156, 163, 175, 0.2)',
-                        borderColor: 'rgba(156, 163, 175, 1)',
-                        borderWidth: 1
-                    }, {
-                        label: '李牧師(反包裝)',
-                        data: [10, 9, 10, 8, 9],
-                        backgroundColor: 'rgba(13, 148, 136, 0.2)',
-                        borderColor: '#0d9488',
-                        borderWidth: 2
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
+            
             // Chart 2: 甜甜圈圖 (內容配比)
             const ctxContent = document.getElementById('contentChart').getContext('2d');
             new Chart(ctxContent, {
