@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <!--網頁標題 -->
     <title>李伯利牧師競選影音企劃</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
@@ -26,12 +26,16 @@
             }
         }
     </script>
-     <!--網頁樣式 -->
+
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
-        
-        /* 嚴格的圖表容器樣式約束 */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        /* 圖表容器 */
         .chart-container {
             position: relative;
             width: 100%;
@@ -43,243 +47,376 @@
         }
         @media (min-width: 768px) {
             .chart-container { height: 350px; }
-        
+        }
+
         /* 分頁切換動畫 */
         .page-content { display: none; }
         .page-content.active { display: block; animation: fadeIn 0.4s ease-out; }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .nav-link.active {
             color: #0d9488;
             border-bottom: 2px solid #0d9488;
-            font-weight: bold;
+            font-weight: 700;
         }
 
         /* 甘特圖樣式 */
-        .gantt-container { overflow-x: auto; }
+        .gantt-container { overflow-x: auto; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
         .gantt-table { width: 100%; min-width: 800px; border-collapse: collapse; }
-        .gantt-th { background-color: #1e293b; color: white; padding: 12px; border: 1px solid #334155; }
-        .gantt-td { background-color: white; border: 1px solid #e2e8f0; padding: 10px; text-align: center; }
-        
-        .tab-btn.active { border-bottom: 4px solid #0d9488; color: #0d9488; font-weight: bold; }
+        .gantt-th {
+            background-color: #1e293b;
+            color: white;
+            padding: 14px 12px;
+            border: 1px solid #334155;
+            font-size: 0.85rem;
+            letter-spacing: 0.03em;
+        }
+        .gantt-td {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
 
+        .tab-btn.active {
+            border-bottom: 3px solid #0d9488;
+            color: #0d9488;
+            font-weight: 700;
+        }
 
-        /* 隱藏滾動條但保持可滾動 */
+        /* 隱藏滾動條 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* tab按鈕（待確認） */
-        .tab-btn.active {
-            border-bottom: 4px solid #0d9488;
-            color: #0d9488;
-            font-weight: bold;
-        }
-        
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .method-card { transition: all 0.3s ease; }
-        .method-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
 
-        /* （待確認） */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+
+        .method-card { transition: all 0.3s ease; }
+        .method-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+
+        /* 願景漸層 */
         .vision-gradient {
             background: linear-gradient(135deg, #1e293b 0%, #0d9488 100%);
-        /* （待確認） */
-        .dot-past { color: #0d9488; font-size: 1.5rem; }
-        .dot-present { color: #2563eb; font-size: 1.5rem; }
-        .dot-future { color: #e11d48; font-size: 1.5rem; }
-         /* （待確認） */
+        }
+
+        .dot-past    { color: #0d9488; font-size: 1.3rem; }
+        .dot-present { color: #2563eb; font-size: 1.3rem; }
+        .dot-future  { color: #e11d48; font-size: 1.3rem; }
+
         .phase-card { transition: transform 0.2s; }
         .phase-card:hover { transform: translateY(-4px); }
-        
+
+        /* 腳本展開 */
+        .script-item { transition: border-color 0.2s; }
+
+        /* sub-tab 按鈕 */
+        .sub-tab-btn {
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 14px 8px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .sub-tab-btn.active { border-bottom: 3px solid #0d9488; color: #0d9488; font-weight: 700; }
+
+        /* 頁面區塊標題裝飾 */
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem; height: 2rem;
+            border-radius: 0.5rem;
+            background: #0d9488;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        /* 卡片通用 */
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+            border: 1px solid #e2e8f0;
+        }
     </style>
 </head>
 
-<!-- 網頁內容 -->
 <body class="bg-light text-dark antialiased">
 
+    <!-- 導覽列 -->
     <nav class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex justify-between h-16 items-center">
-                <!-- 標題 -->
-                <div class="flex-shrink-0 font-bold text-xl text-primary cursor-pointer" onclick="showPage('hero')">
+                <div class="flex-shrink-0 font-bold text-base md:text-lg text-primary cursor-pointer" onclick="showPage('hero')">
                     🎥 競選影片規劃｜李伯利牧師
                 </div>
-                <!-- 分頁選擇 -->
-                <div class="hidden md:flex space-x-6">
-                    <button onclick="showPage('strategy')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">社群戰略</button>
-                    <button onclick="showPage('narrative')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">敘事方式</button>
-                    <button onclick="showPage('execution')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">拍攝腳本</button>
-                    <button onclick="showPage('overview')" class="nav-link px-2 py-5 text-sm text-gray-600 hover:text-primary transition-all">備選影音甘特圖</button>
+                <div class="hidden md:flex space-x-1">
+                    <button onclick="showPage('strategy')"  class="nav-link px-3 py-5 text-sm text-gray-600 hover:text-primary transition-all">社群戰略</button>
+                    <button onclick="showPage('narrative')" class="nav-link px-3 py-5 text-sm text-gray-600 hover:text-primary transition-all">敘事方式</button>
+                    <button onclick="showPage('execution')" class="nav-link px-3 py-5 text-sm text-gray-600 hover:text-primary transition-all">拍攝腳本</button>
+                    <button onclick="showPage('overview')" class="nav-link px-3 py-5 text-sm text-gray-600 hover:text-primary transition-all">備選影音甘特圖</button>
                 </div>
+                <!-- 行動版選單按鈕 -->
+                <button class="md:hidden text-gray-600" onclick="toggleMobile()">☰</button>
+            </div>
+            <!-- 行動版選單 -->
+            <div id="mobile-menu" class="md:hidden hidden pb-3 flex flex-col space-y-1">
+                <button onclick="showPage('strategy');toggleMobile()"  class="text-left px-3 py-2 text-sm text-gray-700 hover:text-primary">社群戰略</button>
+                <button onclick="showPage('narrative');toggleMobile()" class="text-left px-3 py-2 text-sm text-gray-700 hover:text-primary">敘事方式</button>
+                <button onclick="showPage('execution');toggleMobile()" class="text-left px-3 py-2 text-sm text-gray-700 hover:text-primary">拍攝腳本</button>
+                <button onclick="showPage('overview');toggleMobile()"  class="text-left px-3 py-2 text-sm text-gray-700 hover:text-primary">備選影音甘特圖</button>
             </div>
         </div>
     </nav>
 
-    <!--首頁內容 -->
+    <!-- ===== 首頁 ===== -->
     <main id="page-hero" class="page-content active">
-        <header class="bg-white border-b border-gray-200 pt-20 pb-16">
-            <div class="max-w-6xl mx-auto px-4 text-center">
-                <!--首頁標題 -->
-                <h1 class="text-4xl md:text-5xl font-black text-dark mb-6">上帝是大導演，我們只負責<span class="text-primary">真實呈現</span>。</h1>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed">
-                    關於這次的影像計畫這不是一份傳統的競選影音規劃，而是一段關於「一個人如何被看見」的紀錄。
-                    李柏利牧師的生命經歷，包含跌落、轉變與重建，本身即是一段具有力量的故事。本計畫希望透過長期影像陪伴，讓這些故事不被講述，而是被看見。
-                    從日常生活、家庭關係到面對社會的行動，影像將跟隨其生活節奏自然發生，讓觀眾在觀看的過程中，逐步認識這個人。
-                    整體規劃自5月至11月，透過三個階段的內容累積，從情感連結、信任建立到支持轉化，讓理解成為支持的基礎。
-                </p>
-            </div>
-            <!--中間框框 -->
-            <div class="vision-gradient text-white p-8 md:p-12 rounded-3xl shadow-xl overflow-hidden relative">
-                <div class="relative z-10">
-                    <h2 class="text-3xl font-bold mb-6 flex items-center">
-                        <span class="bg-white text-primary w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">01</span>
-                        核心專案願景與品牌定位：敘事霸權
-                    </h2>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <!-- Hero Banner -->
+        <header class="bg-white border-b border-gray-200 pt-16 pb-14">
+            <div class="max-w-5xl mx-auto px-4 text-center">
+                <p class="text-xs font-bold text-primary tracking-widest uppercase mb-3">競選影音企劃書</p>
+                <h1 class="text-3xl md:text-5xl font-black text-dark mb-6 leading-tight">
+                    上帝是大導演，<br class="md:hidden">我們只負責<span class="text-primary">真實呈現</span>。
+                </h1>
+                <p class="text-base text-gray-500 max-w-3xl mx-auto mb-10 leading-loose">
+                    關於這次的影像計畫——這不是一份傳統的競選影音規劃，而是一段關於「一個人如何被看見」的紀錄。
+                    李柏利牧師的生命經歷，包含跌落、轉變與重建，本身即是一段具有力量的故事。本計畫希望透過長期影像陪伴，
+                    讓這些故事不被講述，而是被看見。整體規劃自 5 月至 11 月，透過三個階段的內容累積，從情感連結、信任建立到支持轉化。
+                </p>
+
+                <!-- 三欄統計 -->
+                <div class="grid grid-cols-3 gap-4 max-w-lg mx-auto mb-12">
+                    <div class="card p-4">
+                        <div class="text-2xl font-black text-primary">7</div>
+                        <div class="text-xs text-gray-500 mt-1">執行月份</div>
+                    </div>
+                    <div class="card p-4">
+                        <div class="text-2xl font-black text-secondary">3</div>
+                        <div class="text-xs text-gray-500 mt-1">敘事階段</div>
+                    </div>
+                    <div class="card p-4">
+                        <div class="text-2xl font-black text-dark">120+</div>
+                        <div class="text-xs text-gray-500 mt-1">預估支數</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 願景卡 -->
+            <div class="max-w-5xl mx-auto px-4">
+                <div class="vision-gradient text-white p-8 md:p-10 rounded-3xl shadow-xl">
+                    <div class="flex items-center mb-6">
+                        <span class="bg-white text-primary w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm font-bold flex-shrink-0">01</span>
+                        <h2 class="text-xl md:text-2xl font-bold">核心專案願景與品牌定位：敘事霸權</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                         <div class="space-y-6">
                             <div>
-                                <h3 class="text-xl font-bold text-teal-300 mb-2">1.1 戰略背景：意外的透明度</h3>
+                                <h3 class="text-base font-bold text-teal-300 mb-2">1.1 戰略背景：意外的透明度</h3>
                                 <p class="text-gray-200 text-sm leading-relaxed">
-                                    選民對精緻包裝已產生免疫。李伯利的獨特性在於其投身政治前，因福音工作已將過往「赤露敞開」。這種<span class="text-white font-bold">「因沒想過要從政，所以笨到沒去隱瞞」</span>的坦率，是極強大的信任槓桿。我們將負面過往定義為「上帝是大導演」劇本中的真實角色，建立徹底的「誠實主權」。
+                                    選民對精緻包裝已產生免疫。李伯利的獨特性在於其投身政治前，因福音工作已將過往「赤露敞開」。
+                                    這種<span class="text-white font-bold">「因沒想過要從政，所以笨到沒去隱瞞」</span>的坦率，是極強大的信任槓桿。
+                                    我們將負面過往定義為「上帝是大導演」劇本中的真實角色，建立徹底的「誠實主權」。
                                 </p>
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold text-teal-300 mb-2">1.3 品牌差異化：反包裝戰略</h3>
+                                <h3 class="text-base font-bold text-teal-300 mb-2">1.3 品牌差異化：反包裝戰略</h3>
                                 <p class="text-gray-200 text-sm leading-relaxed">
-                                    傳統追求「編劇式偽裝」，我們定位為「反包裝」。將黑道歷程轉化為「專業社會觀察者」，將痛苦轉化為對社會邊緣與高成就家庭盲區的深刻洞察。這是在展示一個經過火煉、具備管理意志的<span class="text-white font-bold">「守門員」</span>。
+                                    傳統追求「編劇式偽裝」，我們定位為「反包裝」。將黑道歷程轉化為「專業社會觀察者」，
+                                    將痛苦轉化為對社會邊緣與高成就家庭盲區的深刻洞察。這是在展示一個經過火煉、具備管理意志的
+                                    <span class="text-white font-bold">「守門員」</span>。
                                 </p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                        <h3 class="text-lg font-bold mb-4 flex items-center">
-                                1.2 心理錨點與選民對接
-                        </h3>
-                            <!-- 表格 -->
+                        <!-- 表格 -->
+                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20">
+                            <h3 class="text-base font-bold mb-4">1.2 心理錨點與選民對接</h3>
                             <div class="space-y-3">
-                                <div class="grid grid-cols-3 gap-2 py-2 border-b border-white/10 text-xs">
-                                    <div class="font-bold text-teal-200">品牌特質</div>
-                                    <div class="font-bold text-teal-200">戰略價值</div>
-                                    <div class="font-bold text-teal-200">目標受眾</div>
+                                <div class="grid grid-cols-3 gap-2 py-2 border-b border-white/20 text-xs font-bold text-teal-200">
+                                    <div>品牌特質</div>
+                                    <div>戰略價值</div>
+                                    <div>目標受眾</div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 py-2 border-b border-white/10 text-[10px] sm:text-xs">
-                                    <div class="font-bold">極端韌性</div>
-                                    <div class="text-gray-300">債務中存活即能守住財政<br>(壓力測試證明)</div>
-                                    <div class="text-gray-300">中間選民/專業人士</div>
+                                    <div class="font-bold text-white">極端韌性</div>
+                                    <div class="text-gray-300">債務中存活即能守住財政（壓力測試證明）</div>
+                                    <div class="text-gray-300">中間選民 / 專業人士</div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 py-2 border-b border-white/10 text-[10px] sm:text-xs">
-                                    <div class="font-bold">高共情力</div>
-                                    <div class="text-gray-300">透過母親與家庭的真實互動，瓦解政治高牆。<br>(去階級化連結)</div>
-                                    <div class="text-gray-300">年輕家長/一般家庭</div>
+                                    <div class="font-bold text-white">高共情力</div>
+                                    <div class="text-gray-300">透過家庭真實互動，瓦解政治高牆</div>
+                                    <div class="text-gray-300">年輕家長 / 一般家庭</div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 py-2 border-b border-white/10 text-[10px] sm:text-xs">
-                                    <div class="font-bold">無黨債信</div>
-                                    <div class="text-gray-300">無黨包袱，省下黨派利息<br>(誠信投報率 (ROI))</div>
-                                    <div class="text-gray-300">理性選民 (預算關注)</div>
+                                    <div class="font-bold text-white">無黨債信</div>
+                                    <div class="text-gray-300">無黨包袱，省下黨派利息（誠信 ROI）</div>
+                                    <div class="text-gray-300">理性選民（預算關注）</div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 py-2 text-[10px] sm:text-xs">
-                                    <div class="font-bold">開拓者精神</div>
-                                    <div class="text-gray-300">從廢墟中重建秩序<br>(從零到一的執行力)</div>
+                                    <div class="font-bold text-white">開拓者精神</div>
+                                    <div class="text-gray-300">從廢墟中重建秩序（從零到一的執行力）</div>
                                     <div class="text-gray-300">尋求改變的開拓者</div>
                                 </div>
+                            </div>
                         </div>
                     </div>
-                </div>            
+                </div>
+            </div>
         </header>
     </main>
 
 
- <!--分頁２：社群戰略 -->
-    <main id="page-strategy" class="page-content max-w-6xl mx-auto px-4 py-12">
-        <h2 class="text-3xl font-bold text-center mb-10">二、社群戰略：真實感操作</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center bg-white p-8 rounded-2xl shadow-sm border">
-            <ul class="space-y-6">
-                <li class="border-l-4 border-primary pl-4">
-                    <h4 class="font-bold">第一視角與側拍</h4>
-                    <p class="text-sm text-gray-600">大量使用團隊跟拍，展現「不完美但極度真實」的日常。</p>
-                </li>
-                <li class="border-l-4 border-primary pl-4">
-                    <h4 class="font-bold">白板開講與預算解密</h4>
-                    <p class="text-sm text-gray-600">手拿麥克筆拆解台南預算，建立專業監督者的形象。</p>
-                </li>
-            </ul>
-            <div class="chart-container">
-                <canvas id="strategyChart"></canvas>
+    <!-- ===== 分頁 2：社群戰略 ===== -->
+    <main id="page-strategy" class="page-content max-w-5xl mx-auto px-4 py-12">
+        <div class="flex items-center justify-center space-x-3 mb-10">
+            <span class="section-badge">02</span>
+            <h2 class="text-2xl md:text-3xl font-black">社群戰略：真實感操作</h2>
+        </div>
+
+        <div class="card p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                <div class="space-y-6">
+                    <div class="border-l-4 border-primary pl-5">
+                        <h4 class="font-bold text-base mb-1">第一視角與側拍</h4>
+                        <p class="text-sm text-gray-500 leading-relaxed">大量使用團隊跟拍，展現「不完美但極度真實」的日常。</p>
+                    </div>
+                    <div class="border-l-4 border-secondary pl-5">
+                        <h4 class="font-bold text-base mb-1">白板開講與預算解密</h4>
+                        <p class="text-sm text-gray-500 leading-relaxed">手拿麥克筆拆解台南預算，建立專業監督者的形象。</p>
+                    </div>
+                    <div class="border-l-4 border-blue-500 pl-5">
+                        <h4 class="font-bold text-base mb-1">家庭與日常切入</h4>
+                        <p class="text-sm text-gray-500 leading-relaxed">透過母親、孩子等親近關係的真實互動，去除政治高牆。</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="strategyChart"></canvas>
+                </div>
             </div>
         </div>
     </main>
 
-    <main id="page-narrative" class="page-content max-w-6xl mx-auto px-4 py-12">
-        <h2 class="text-3xl font-bold text-center mb-10">三、敘事三部曲</h2>
-        <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
+
+    <!-- ===== 分頁 3：敘事方式 ===== -->
+    <main id="page-narrative" class="page-content max-w-5xl mx-auto px-4 py-12">
+        <div class="flex items-center justify-center space-x-3 mb-10">
+            <span class="section-badge">03</span>
+            <h2 class="text-2xl md:text-3xl font-black">敘事三部曲</h2>
+        </div>
+
+        <div class="card overflow-hidden">
+            <!-- Tab 列 -->
             <div class="flex border-b">
-                <button onclick="switchTab('past')" id="btn-past" class="sub-tab-btn active flex-1 py-4 text-center">過去 (真實)</button>
-                <button onclick="switchTab('present')" id="btn-present" class="sub-tab-btn flex-1 py-4 text-center text-gray-500">現在 (行動)</button>
-                <button onclick="switchTab('future')" id="btn-future" class="sub-tab-btn flex-1 py-4 text-center text-gray-500">未來 (願景)</button>
+                <button onclick="switchTab('past')"    id="btn-past"    class="sub-tab-btn active flex-1 text-center">🟠 過去（真實）</button>
+                <button onclick="switchTab('present')" id="btn-present" class="sub-tab-btn flex-1 text-center text-gray-400">🟢 現在（行動）</button>
+                <button onclick="switchTab('future')"  id="btn-future"  class="sub-tab-btn flex-1 text-center text-gray-400">🔵 未來（願景）</button>
             </div>
+            <!-- Tab 內容 -->
             <div class="p-8">
-                <div id="content-past" class="narrative-content block">
-                    <h3 class="text-2xl font-bold text-secondary mb-4">從黑道到牧師的「浪子回頭」</h3>
-                    <p class="text-gray-700">重點在於不怕檢視的韌性。透過老照片與訪談，展現坦蕩的格局。</p>
+                <div id="content-past" class="narrative-content">
+                    <span class="inline-block px-3 py-1 bg-orange-100 text-orange-600 text-xs font-bold rounded-full mb-4">5月 – 6月 主軸</span>
+                    <h3 class="text-xl font-black text-secondary mb-3">從黑道到牧師的「浪子回頭」</h3>
+                    <p class="text-gray-600 leading-relaxed">重點在於不怕檢視的韌性。透過老照片與訪談，展現坦蕩的格局。不包裝、不掩飾，讓真實的轉變成為最強的說服力。</p>
                 </div>
                 <div id="content-present" class="narrative-content hidden">
-                    <h3 class="text-2xl font-bold text-primary mb-4">在地深耕與「真實不作假」</h3>
-                    <p class="text-gray-700">開箱辦公室、處理選民服務。展現用最少預算做最高質感的「省錢能力」。</p>
+                    <span class="inline-block px-3 py-1 bg-teal-100 text-teal-600 text-xs font-bold rounded-full mb-4">7月 – 8月 主軸</span>
+                    <h3 class="text-xl font-black text-primary mb-3">在地深耕與「真實不作假」</h3>
+                    <p class="text-gray-600 leading-relaxed">開箱辦公室、處理選民服務。展現用最少預算做最高質感的「省錢能力」。行動說話，不需要美化。</p>
                 </div>
                 <div id="content-future" class="narrative-content hidden">
-                    <h3 class="text-2xl font-bold text-blue-600 mb-4">議會防腐劑與教育推手</h3>
-                    <p class="text-gray-700">「拿白板講政策」，教民眾看懂 1200 億預算流向，強調無黨籍優勢。</p>
+                    <span class="inline-block px-3 py-1 bg-blue-100 text-blue-600 text-xs font-bold rounded-full mb-4">9月 – 11月 主軸</span>
+                    <h3 class="text-xl font-black text-blue-600 mb-3">議會防腐劑與教育推手</h3>
+                    <p class="text-gray-600 leading-relaxed">「拿白板講政策」，教民眾看懂 1200 億預算流向，強調無黨籍優勢。讓理解成為支持的基礎。</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <main id="page-execution" class="page-content max-w-6xl mx-auto px-4 py-12">
-        <h2 class="text-3xl font-bold text-center mb-10">四、產出配比與腳本</h2>
+
+    <!-- ===== 分頁 4：拍攝腳本 ===== -->
+    <main id="page-execution" class="page-content max-w-5xl mx-auto px-4 py-12">
+        <div class="flex items-center justify-center space-x-3 mb-10">
+            <span class="section-badge">04</span>
+            <h2 class="text-2xl md:text-3xl font-black">產出配比與腳本</h2>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border flex flex-col items-center">
-                <h3 class="font-bold mb-4">影音產出配比</h3>
-                <div class="chart-container" style="height: 200px;">
+            <!-- 圓餅圖 -->
+            <div class="card p-6 flex flex-col items-center">
+                <h3 class="font-bold mb-4 text-sm text-gray-600">影音產出配比</h3>
+                <div class="chart-container" style="height: 220px;">
                     <canvas id="contentChart"></canvas>
                 </div>
+                <div class="mt-4 space-y-2 text-xs w-full">
+                    <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded-full bg-primary inline-block"></span><span>短影音（觸及）60%</span></div>
+                    <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded-full bg-secondary inline-block"></span><span>紀錄長片（人設）25%</span></div>
+                    <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded-full bg-dark inline-block"></span><span>直播（連結）15%</span></div>
+                </div>
             </div>
+
+            <!-- 腳本列表 -->
             <div class="lg:col-span-2 space-y-4">
-                <div class="bg-white p-4 rounded-xl border hover:border-primary cursor-pointer transition-all" onclick="toggleScript('script1')">
-                    <h4 class="font-bold text-primary">🎬 腳本 A：全台最神祕辦公室開箱 ▼</h4>
-                    <div id="script1" class="hidden mt-2 text-sm text-gray-600 border-t pt-2">
-                        場景：地圖村辦公室。重點：展現預算控制能力。
+                <div class="card p-5 script-item cursor-pointer hover:border-primary transition-all" onclick="toggleScript('script1')">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-primary text-sm">🎬 腳本 A：全台最神祕辦公室開箱</h4>
+                        <span class="text-gray-400 text-xs" id="arrow1">▼ 展開</span>
+                    </div>
+                    <div id="script1" class="hidden mt-3 pt-3 border-t text-sm text-gray-500 leading-relaxed">
+                        <p><strong>場景：</strong>地圖村辦公室。</p>
+                        <p class="mt-1"><strong>重點：</strong>展現預算控制能力，「用最少錢做最多事」的省錢哲學。</p>
+                        <p class="mt-1"><strong>風格：</strong>第一視角跟拍，不加濾鏡，真實呈現空間與氛圍。</p>
                     </div>
                 </div>
-                <div class="bg-white p-4 rounded-xl border hover:border-secondary cursor-pointer transition-all" onclick="toggleScript('script2')">
-                    <h4 class="font-bold text-secondary">🎙️ 腳本 B：黑道到牧師的告白 ▼</h4>
-                    <div id="script2" class="hidden mt-2 text-sm text-gray-600 border-t pt-2">
-                        場景：書房訪談。重點：打破完美包裝，真誠表露。
+                <div class="card p-5 script-item cursor-pointer hover:border-secondary transition-all" onclick="toggleScript('script2')">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-secondary text-sm">🎙️ 腳本 B：黑道到牧師的告白</h4>
+                        <span class="text-gray-400 text-xs" id="arrow2">▼ 展開</span>
+                    </div>
+                    <div id="script2" class="hidden mt-3 pt-3 border-t text-sm text-gray-500 leading-relaxed">
+                        <p><strong>場景：</strong>書房訪談。</p>
+                        <p class="mt-1"><strong>重點：</strong>打破完美包裝，真誠表露過往與轉變的歷程。</p>
+                        <p class="mt-1"><strong>風格：</strong>自然光源，靜態鏡頭，讓人物說話本身成為畫面核心。</p>
+                    </div>
+                </div>
+                <div class="card p-5 script-item cursor-pointer hover:border-blue-500 transition-all" onclick="toggleScript('script3')">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-blue-600 text-sm">📊 腳本 C：白板拆解 1200 億預算</h4>
+                        <span class="text-gray-400 text-xs" id="arrow3">▼ 展開</span>
+                    </div>
+                    <div id="script3" class="hidden mt-3 pt-3 border-t text-sm text-gray-500 leading-relaxed">
+                        <p><strong>場景：</strong>辦公室白板前。</p>
+                        <p class="mt-1"><strong>重點：</strong>教民眾看懂市政預算結構，建立專業監督者形象。</p>
+                        <p class="mt-1"><strong>風格：</strong>快節奏剪輯，字幕輔助，資訊視覺化。</p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!--備選甘特圖 -->
-    <main id="page-overview" class="page-content max-w-6xl mx-auto px-4 py-12">
-        <!-- 第一部分 -->
-        <div class="flex items-center space-x-3 mb-8">
-            <span class="bg-teal-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold">01</span>
-            <h3 class="text-2xl font-black text-slate-800">影像策略時間軸（主題推進）</h3>
+
+    <!-- ===== 分頁 5：甘特圖 ===== -->
+    <main id="page-overview" class="page-content max-w-5xl mx-auto px-4 py-12">
+
+        <!-- 區塊一：時間軸 -->
+        <div class="flex items-center space-x-3 mb-6">
+            <span class="section-badge">01</span>
+            <h3 class="text-xl md:text-2xl font-black text-slate-800">影像策略時間軸（主題推進）</h3>
         </div>
-        <!-- 甘特圖 -->    
-        <div class="gantt-container">
+
+        <div class="gantt-container mb-10">
             <table class="gantt-table">
                 <thead>
                     <tr>
-                        <th class="gantt-th">月份 / 主題</th>
+                        <th class="gantt-th text-left">月份 / 主題</th>
                         <th class="gantt-th">5月</th>
                         <th class="gantt-th">6月</th>
                         <th class="gantt-th">7月</th>
@@ -291,17 +428,17 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="gantt-td gantt-label border-l-4 border-teal-500">過去 (故事背景)</td>
+                        <td class="gantt-td border-l-4 border-teal-500 text-left font-medium">過去（故事背景）</td>
                         <td class="gantt-td"><span class="dot-past">●●●</span><br><span class="text-[10px] text-teal-600 font-bold">主軸</span></td>
                         <td class="gantt-td"><span class="dot-past">●●</span><br><span class="text-[10px] text-slate-400">收束</span></td>
                         <td class="gantt-td"><span class="dot-past">●</span><br><span class="text-[10px] text-slate-300">補充</span></td>
-                        <td class="gantt-td text-slate-300">-</td>
-                        <td class="gantt-td text-slate-300">-</td>
-                        <td class="gantt-td text-slate-300">-</td>
-                        <td class="gantt-td text-slate-300">-</td>
+                        <td class="gantt-td text-slate-300">–</td>
+                        <td class="gantt-td text-slate-300">–</td>
+                        <td class="gantt-td text-slate-300">–</td>
+                        <td class="gantt-td text-slate-300">–</td>
                     </tr>
                     <tr>
-                        <td class="gantt-td gantt-label border-l-4 border-blue-500">現在 (行動日常)</td>
+                        <td class="gantt-td border-l-4 border-blue-500 text-left font-medium">現在（行動日常）</td>
                         <td class="gantt-td"><span class="dot-present">●</span><br><span class="text-[10px] text-slate-400">鋪墊</span></td>
                         <td class="gantt-td"><span class="dot-present">●●</span><br><span class="text-[10px] text-slate-400">開始</span></td>
                         <td class="gantt-td"><span class="dot-present">●●●</span><br><span class="text-[10px] text-blue-600 font-bold">主軸</span></td>
@@ -311,9 +448,9 @@
                         <td class="gantt-td"><span class="dot-present">●</span><br><span class="text-[10px] text-slate-400">輔助</span></td>
                     </tr>
                     <tr>
-                        <td class="gantt-td gantt-label border-l-4 border-rose-500">未來 (政策治理)</td>
-                        <td class="gantt-td text-slate-300">-</td>
-                        <td class="gantt-td text-slate-300">-</td>
+                        <td class="gantt-td border-l-4 border-rose-500 text-left font-medium">未來（政策治理）</td>
+                        <td class="gantt-td text-slate-300">–</td>
+                        <td class="gantt-td text-slate-300">–</td>
                         <td class="gantt-td"><span class="dot-future">●</span><br><span class="text-[10px] text-slate-400">試水</span></td>
                         <td class="gantt-td"><span class="dot-future">●●</span><br><span class="text-[10px] text-slate-400">建立</span></td>
                         <td class="gantt-td"><span class="dot-future">●●●</span><br><span class="text-[10px] text-rose-600 font-bold">主軸</span></td>
@@ -323,209 +460,207 @@
                 </tbody>
             </table>
         </div>
-        <br/>
-        
-        <!--第二部分-->
-        <div class="flex items-center space-x-3 mb-4 mt-4">
-                <span class="bg-teal-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold">02</span>
-                <h3 class="text-2xl font-black text-slate-800">每月詳細執行規劃</h3>
-            </div>
 
-            <!-- 5-6月 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-teal-500 shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <h4 class="text-xl font-black text-teal-600">🟢 5月｜人物建立</h4>
-                        <span class="text-xs bg-teal-50 text-teal-600 px-2 py-1 rounded font-bold">過去主軸</span>
-                    </div>
-                    <div class="space-y-4 text-sm">
-                        <p class="text-slate-600 font-medium">🎯 核心敘事：「他是怎麼走到這裡的」</p>
-                        <div class="bg-slate-50 p-3 rounded-lg flex justify-between">
-                            <span>🎬 長片：<strong>1支</strong> (生命轉折)</span>
-                            <span>🎞 短片：<strong>15-18支</strong></span>
-                        </div>
-                        <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
-                            <li>浪子回頭／母親教育影響</li>
-                            <li>建立人物辨識，降低距離感</li>
-                            <li>決策：不講政治、不講政策</li>
-                        </ul>
-                    </div>
+        <!-- 區塊二：每月規劃 -->
+        <div class="flex items-center space-x-3 mb-6">
+            <span class="section-badge">02</span>
+            <h3 class="text-xl md:text-2xl font-black text-slate-800">每月詳細執行規劃</h3>
+        </div>
+
+        <!-- 5–6月 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-teal-500 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-lg font-black text-teal-600">🟢 5月｜人物建立</h4>
+                    <span class="text-xs bg-teal-50 text-teal-600 px-2 py-1 rounded font-bold">過去主軸</span>
                 </div>
-
-                <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-teal-300 shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <h4 class="text-xl font-black text-teal-400">🟢 6月｜過去收束</h4>
-                        <span class="text-xs bg-teal-50 text-teal-400 px-2 py-1 rounded font-bold">現在鋪墊</span>
+                <div class="space-y-3 text-sm">
+                    <p class="text-slate-600 font-medium">🎯 核心敘事：「他是怎麼走到這裡的」</p>
+                    <div class="bg-slate-50 p-3 rounded-lg flex justify-between text-xs">
+                        <span>🎬 長片：<strong>1支</strong>（生命轉折）</span>
+                        <span>🎞 短片：<strong>15–18支</strong></span>
                     </div>
-                    <div class="space-y-4 text-sm">
-                        <p class="text-slate-600 font-medium">🎯 核心敘事：「經歷，影響他現在怎麼活」</p>
-                        <div class="bg-slate-50 p-3 rounded-lg flex justify-between">
-                            <span>🎬 長片：<strong>1支</strong> (家庭關係)</span>
-                            <span>🎞 短片：<strong>15-20支</strong></span>
-                        </div>
-                        <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
-                            <li>建立人味與親近感</li>
-                            <li>決策：過去不拖太久，轉入生活</li>
-                            <li>發文頻率：每週 4 支短片</li>
-                        </ul>
-                    </div>
+                    <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
+                        <li>浪子回頭／母親教育影響</li>
+                        <li>建立人物辨識，降低距離感</li>
+                        <li>決策：不講政治、不講政策</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- 7-8月 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-blue-500 shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <h4 class="text-xl font-black text-blue-600">🟡 7月｜行動建立</h4>
-                        <span class="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded font-bold">現在主軸</span>
-                    </div>
-                    <div class="space-y-4 text-sm">
-                        <p class="text-slate-600 font-medium">🎯 核心敘事：「他現在正在做什麼」</p>
-                        <div class="bg-slate-50 p-3 rounded-lg flex justify-between">
-                            <span>🎬 長片：<strong>1-2支</strong> (行動紀錄)</span>
-                            <span>🎞 短片：<strong>18-22支</strong></span>
-                        </div>
-                        <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
-                            <li>建立「會做事」形象與協會日常</li>
-                            <li>決策：行動 > 語言，看到而非說到</li>
-                            <li>發文頻率：每週 4-5 支短片</li>
-                        </ul>
-                    </div>
+            <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-teal-300 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-lg font-black text-teal-400">🟢 6月｜過去收束</h4>
+                    <span class="text-xs bg-teal-50 text-teal-400 px-2 py-1 rounded font-bold">現在鋪墊</span>
                 </div>
+                <div class="space-y-3 text-sm">
+                    <p class="text-slate-600 font-medium">🎯 核心敘事：「經歷，影響他現在怎麼活」</p>
+                    <div class="bg-slate-50 p-3 rounded-lg flex justify-between text-xs">
+                        <span>🎬 長片：<strong>1支</strong>（家庭關係）</span>
+                        <span>🎞 短片：<strong>15–20支</strong></span>
+                    </div>
+                    <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
+                        <li>建立人味與親近感</li>
+                        <li>決策：過去不拖太久，轉入生活</li>
+                        <li>發文頻率：每週 4 支短片</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-                <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-blue-300 shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <h4 class="text-xl font-black text-blue-400">🟡 8月｜信任深化</h4>
-                        <span class="text-xs bg-blue-50 text-blue-400 px-2 py-1 rounded font-bold">未來鋪墊</span>
+        <!-- 7–8月 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-blue-500 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-lg font-black text-blue-600">🟡 7月｜行動建立</h4>
+                    <span class="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded font-bold">現在主軸</span>
+                </div>
+                <div class="space-y-3 text-sm">
+                    <p class="text-slate-600 font-medium">🎯 核心敘事：「他現在正在做什麼」</p>
+                    <div class="bg-slate-50 p-3 rounded-lg flex justify-between text-xs">
+                        <span>🎬 長片：<strong>1–2支</strong>（行動紀錄）</span>
+                        <span>🎞 短片：<strong>18–22支</strong></span>
                     </div>
-                    <div class="space-y-4 text-sm">
-                        <p class="text-slate-600 font-medium">🎯 核心敘事：「他怎麼做決定」</p>
-                        <div class="bg-slate-50 p-3 rounded-lg flex justify-between">
-                            <span>🎬 長片：<strong>1支</strong> (價值觀)</span>
-                            <span>🎞 短片：<strong>20-25支</strong></span>
-                        </div>
-                        <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
-                            <li>建立認同感，開啟輕議題</li>
-                            <li>決策：開始觸碰公共事宜，但不說教</li>
-                            <li>發文頻率：每週 5 支短片</li>
-                        </ul>
-                    </div>
+                    <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
+                        <li>建立「會做事」形象與協會日常</li>
+                        <li>決策：行動 > 語言，看到而非說到</li>
+                        <li>發文頻率：每週 4–5 支短片</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- 9-11月 -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-rose-500 shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <h4 class="text-xl font-black text-rose-600">🔴 9月｜議題建立</h4>
-                        <span class="text-xs bg-rose-50 text-rose-600 px-2 py-1 rounded font-bold">未來主軸</span>
-                    </div>
-                    <div class="space-y-4 text-sm">
-                        <p class="text-slate-600 font-medium">🎯 核心敘事：治理者的視角</p>
-                        <div class="bg-slate-50 p-3 rounded-lg flex flex-col">
-                            <span>🎬 長片：<strong>1支</strong> (城市觀點)</span>
-                            <span>🎞 短片：<strong>22-28支</strong></span>
-                        </div>
-                        <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
-                            <li>建立治理感與預算監督</li>
-                            <li>決策：講「判斷」不只講政策</li>
-                        </ul>
-                    </div>
+            <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-blue-300 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-lg font-black text-blue-400">🟡 8月｜信任深化</h4>
+                    <span class="text-xs bg-blue-50 text-blue-400 px-2 py-1 rounded font-bold">未來鋪墊</span>
                 </div>
-
-                <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-rose-400 shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <h4 class="text-xl font-black text-rose-500">🔴 10月｜支持醞釀</h4>
-                        <span class="text-xs bg-rose-50 text-rose-400 px-2 py-1 rounded font-bold">政策深化</span>
+                <div class="space-y-3 text-sm">
+                    <p class="text-slate-600 font-medium">🎯 核心敘事：「他怎麼做決定」</p>
+                    <div class="bg-slate-50 p-3 rounded-lg flex justify-between text-xs">
+                        <span>🎬 長片：<strong>1支</strong>（價值觀）</span>
+                        <span>🎞 短片：<strong>20–25支</strong></span>
                     </div>
-                    <div class="space-y-4 text-sm">
-                        <p class="text-slate-600 font-medium">🎯 核心敘事：為什麼需要他</p>
-                        <div class="bg-slate-50 p-3 rounded-lg flex flex-col">
-                            <span>🎬 長片：<strong>1-2支</strong> (政見整合)</span>
-                            <span>🎞 短片：<strong>25-30支</strong></span>
-                        </div>
-                        <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
-                            <li>建立支持氛圍，明確立場</li>
-                            <li>決策：立場堅定但保留人味</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-red-600 shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <h4 class="text-xl font-black text-red-600">🔴 11月｜投票轉化</h4>
-                        <span class="text-xs bg-red-50 text-red-600 px-2 py-1 rounded font-bold">行動導向</span>
-                    </div>
-                    <div class="space-y-4 text-sm">
-                        <p class="text-slate-600 font-medium">🎯 核心敘事：選擇他的意義</p>
-                        <div class="bg-slate-50 p-3 rounded-lg flex flex-col">
-                            <span>🎬 長片：<strong>1支</strong> (最終整合)</span>
-                            <span>🎞 短片：<strong>25-35支</strong></span>
-                        </div>
-                        <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
-                            <li>最後衝刺，轉化投票意願</li>
-                            <li>決策：行動呼籲，真實語氣</li>
-                        </ul>
-                    </div>
+                    <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
+                        <li>建立認同感，開啟輕議題</li>
+                        <li>決策：開始觸碰公共事宜，但不說教</li>
+                        <li>發文頻率：每週 5 支短片</li>
+                    </ul>
                 </div>
             </div>
+        </div>
+
+        <!-- 9–11月 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-rose-500 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-lg font-black text-rose-600">🔴 9月｜議題建立</h4>
+                    <span class="text-xs bg-rose-50 text-rose-600 px-2 py-1 rounded font-bold">未來主軸</span>
+                </div>
+                <div class="space-y-3 text-sm">
+                    <p class="text-slate-600 font-medium">🎯 核心敘事：治理者的視角</p>
+                    <div class="bg-slate-50 p-3 rounded-lg text-xs space-y-1">
+                        <div>🎬 長片：<strong>1支</strong>（城市觀點）</div>
+                        <div>🎞 短片：<strong>22–28支</strong></div>
+                    </div>
+                    <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
+                        <li>建立治理感與預算監督</li>
+                        <li>決策：講「判斷」不只講政策</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-rose-400 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-lg font-black text-rose-500">🔴 10月｜支持醞釀</h4>
+                    <span class="text-xs bg-rose-50 text-rose-400 px-2 py-1 rounded font-bold">政策深化</span>
+                </div>
+                <div class="space-y-3 text-sm">
+                    <p class="text-slate-600 font-medium">🎯 核心敘事：為什麼需要他</p>
+                    <div class="bg-slate-50 p-3 rounded-lg text-xs space-y-1">
+                        <div>🎬 長片：<strong>1–2支</strong>（政見整合）</div>
+                        <div>🎞 短片：<strong>25–30支</strong></div>
+                    </div>
+                    <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
+                        <li>建立支持氛圍，明確立場</li>
+                        <li>決策：立場堅定但保留人味</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase-card bg-white p-6 rounded-2xl border-t-8 border-red-600 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="text-lg font-black text-red-600">🔴 11月｜投票轉化</h4>
+                    <span class="text-xs bg-red-50 text-red-600 px-2 py-1 rounded font-bold">行動導向</span>
+                </div>
+                <div class="space-y-3 text-sm">
+                    <p class="text-slate-600 font-medium">🎯 核心敘事：選擇他的意義</p>
+                    <div class="bg-slate-50 p-3 rounded-lg text-xs space-y-1">
+                        <div>🎬 長片：<strong>1支</strong>（最終整合）</div>
+                        <div>🎞 短片：<strong>25–35支</strong></div>
+                    </div>
+                    <ul class="space-y-1 text-xs text-slate-500 list-disc list-inside">
+                        <li>最後衝刺，轉化投票意願</li>
+                        <li>決策：行動呼籲，真實語氣</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    
+
     <script>
-        // 分頁切換功能
+        // 行動版選單切換
+        function toggleMobile() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // 分頁切換
         function showPage(pageId) {
-            // 隱藏所有分頁
-            document.querySelectorAll('.page-content').forEach(page => {
-                page.classList.remove('active');
-            });
-            // 顯示目標分頁
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
-            
-            // 更新導覽列樣式
+
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
-                if (link.innerText.includes(getPageName(pageId))) {
-                    link.classList.add('active');
-                }
+                const names = { strategy: '社群戰略', narrative: '敘事方式', execution: '拍攝腳本', overview: '甘特圖' };
+                if (link.innerText.trim() === names[pageId]) link.classList.add('active');
             });
 
-            // 如果切換到有圖表的分頁，重新初始化圖表
             if (pageId === 'strategy') initStrategyChart();
             if (pageId === 'execution') initContentChart();
-            
-            // 捲動回頂部
-            window.scrollTo(0, 0);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function getPageName(id) {
-            const names = { vision: '願景', strategy: '風格', narrative: '敘事', execution: '腳本', overview: '甘特圖' };
-            return names[id] || '';
-        }
-
-        // 敘事三部曲 Tab 切換
+        // 敘事 Tab 切換
         function switchTab(tab) {
             document.querySelectorAll('.narrative-content').forEach(c => c.classList.add('hidden'));
             document.getElementById('content-' + tab).classList.remove('hidden');
-            
+
             document.querySelectorAll('.sub-tab-btn').forEach(b => {
                 b.classList.remove('active', 'text-primary', 'text-secondary', 'text-blue-600');
-                b.classList.add('text-gray-500');
+                b.classList.add('text-gray-400');
             });
-            
+
             const btn = document.getElementById('btn-' + tab);
+            btn.classList.remove('text-gray-400');
             btn.classList.add('active');
-            if(tab === 'past') btn.classList.add('text-secondary');
-            if(tab === 'present') btn.classList.add('text-primary');
-            if(tab === 'future') btn.classList.add('text-blue-600');
+            if (tab === 'past')    btn.classList.add('text-secondary');
+            if (tab === 'present') btn.classList.add('text-primary');
+            if (tab === 'future')  btn.classList.add('text-blue-600');
         }
 
+        // 腳本展開
         function toggleScript(id) {
             const el = document.getElementById(id);
+            const num = id.replace('script', '');
+            const arrow = document.getElementById('arrow' + num);
             el.classList.toggle('hidden');
+            arrow.textContent = el.classList.contains('hidden') ? '▼ 展開' : '▲ 收合';
         }
 
-        // 圖表初始化
+        // 圖表
         let charts = {};
 
         function initStrategyChart() {
@@ -540,14 +675,20 @@
                         data: [95, 85, 90, 88, 80],
                         backgroundColor: 'rgba(13, 148, 136, 0.2)',
                         borderColor: '#0d9488',
+                        pointBackgroundColor: '#0d9488',
                     }, {
                         label: '傳統政客',
                         data: [40, 60, 50, 60, 45],
-                        backgroundColor: 'rgba(30, 41, 59, 0.1)',
-                        borderColor: '#1e293b',
+                        backgroundColor: 'rgba(30, 41, 59, 0.08)',
+                        borderColor: '#94a3b8',
+                        pointBackgroundColor: '#94a3b8',
                     }]
                 },
-                options: { maintainAspectRatio: false }
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Noto Sans TC', size: 12 } } } },
+                    scales: { r: { grid: { color: '#e2e8f0' }, ticks: { display: false } } }
+                }
             });
         }
 
@@ -557,17 +698,21 @@
             charts.content = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['短影音(觸及)', '紀錄長片(人設)', '直播(連結)'],
+                    labels: ['短影音（觸及）', '紀錄長片（人設）', '直播（連結）'],
                     datasets: [{
                         data: [60, 25, 15],
-                        backgroundColor: ['#0d9488', '#f97316', '#1e293b']
+                        backgroundColor: ['#0d9488', '#f97316', '#1e293b'],
+                        borderWidth: 0,
                     }]
                 },
-                options: { maintainAspectRatio: false }
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '65%'
+                }
             });
         }
 
-        // 初始加載
         window.onload = () => {
             initStrategyChart();
             initContentChart();
