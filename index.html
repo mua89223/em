@@ -28,9 +28,9 @@
     </script>
      <!--網頁樣式 -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
-        
+                @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; }
+
         /* 嚴格的圖表容器樣式約束 */
         .chart-container {
             position: relative;
@@ -43,6 +43,39 @@
         }
         @media (min-width: 768px) {
             .chart-container { height: 350px; }
+        }
+
+        /* 隱藏滾動條但保持可滾動 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .tab-btn.active {
+            border-bottom: 4px solid #0d9488;
+            color: #0d9488;
+            font-weight: bold;
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .method-card { transition: all 0.3s ease; }
+        .method-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        .vision-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #0d9488 100%);
+                .gantt-container { overflow-x: auto; scrollbar-width: none; }
+        .gantt-container::-webkit-scrollbar { display: none; }
+
+        .gantt-table { width: 100%; min-width: 800px; border-collapse: collapse; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .gantt-th { background-color: #1e293b; color: white; padding: 12px; text-align: center; border: 1px solid #334155; font-size: 0.9rem; }
+        .gantt-td { background-color: white; border: 1px solid #e2e8f0; padding: 10px; text-align: center; font-size: 0.85rem; height: 60px; }
+        .gantt-label { background-color: #f1f5f9; font-weight: 700; width: 140px; text-align: left; padding-left: 15px; }
+
+        .dot-past { color: #0d9488; font-size: 1.5rem; }
+        .dot-present { color: #2563eb; font-size: 1.5rem; }
+        .dot-future { color: #e11d48; font-size: 1.5rem; }
+
+        .phase-card { transition: transform 0.2s; }
+        .phase-card:hover { transform: translateY(-4px); }
         
         /* 分頁切換動畫 */
         .page-content { display: none; }
@@ -59,42 +92,7 @@
             font-weight: bold;
         }
 
-        /* 甘特圖樣式 */
-        .gantt-container { overflow-x: auto; }
-        .gantt-table { width: 100%; min-width: 800px; border-collapse: collapse; }
-        .gantt-th { background-color: #1e293b; color: white; padding: 12px; border: 1px solid #334155; }
-        .gantt-td { background-color: white; border: 1px solid #e2e8f0; padding: 10px; text-align: center; }
         
-        .tab-btn.active { border-bottom: 4px solid #0d9488; color: #0d9488; font-weight: bold; }
-
-
-        /* 隱藏滾動條但保持可滾動 */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* tab按鈕（待確認） */
-        .tab-btn.active {
-            border-bottom: 4px solid #0d9488;
-            color: #0d9488;
-            font-weight: bold;
-        }
-        
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .method-card { transition: all 0.3s ease; }
-        .method-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* （待確認） */
-        .vision-gradient {
-            background: linear-gradient(135deg, #1e293b 0%, #0d9488 100%);
-        /* （待確認） */
-        .dot-past { color: #0d9488; font-size: 1.5rem; }
-        .dot-present { color: #2563eb; font-size: 1.5rem; }
-        .dot-future { color: #e11d48; font-size: 1.5rem; }
-         /* （待確認） */
-        .phase-card { transition: transform 0.2s; }
-        .phase-card:hover { transform: translateY(-4px); }
     </style>
 </head>
 
